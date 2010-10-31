@@ -1,6 +1,5 @@
-import frozenset
 
-GRE_WORDS = frozenset([
+GRE_WORDS = set([
 'bastion',
 'growl',
 'maverick',
@@ -4895,7 +4894,7 @@ GRE_WORDS = frozenset([
 'incisive'
 ])
 
-SAT_WORDS = frozenset([
+SAT_WORDS = set([
 'abase',
 'abbess',
 'abbey',
@@ -4981,7 +4980,7 @@ SAT_WORDS = frozenset([
 'acetate',
 'acetic',
 'ache',
-'Achillean',
+'achillean',
 'achromatic',
 'acid',
 'acidify',
@@ -6983,7 +6982,6 @@ SAT_WORDS = frozenset([
 'haggard',
 'halcyon',
 'hale',
-'handwriting',
 'hanger-on',
 'happy-go-lucky',
 'harangue',
@@ -9901,7 +9899,6 @@ SAT_WORDS = frozenset([
 'wrest',
 'wretchedness',
 'writhe',
-'writing',
 'wry',
 'yearling',
 'zealot',
