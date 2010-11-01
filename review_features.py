@@ -28,3 +28,17 @@ def fill_review_features(review):
 	fill_gre_word_freq(review)
 	fill_sat_word_freq(review)
 
+def word_count(feature):
+    """The number of words in the review"""
+    words=re.split('\w+',body)
+    return len(words)-1
+
+def ave_words_per_sentence(feature):
+    """Average number of words per sentence"""
+    body=feature['text']
+    words=re.split('\w+',body)
+    ends = re.compile('[.!?]+')
+    sentences = ends.split(body)
+    sentences=[m for m in sentences if len(m) > 5]
+    return float(len(words)-1)/len(sentences)
+
