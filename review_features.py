@@ -47,5 +47,6 @@ def fill_review_features(review):
 	"""Fill all review features in `review`"""
 	fill_gre_word_freq(review)
 	fill_sat_word_freq(review)
-
+	fill_word_count(review)
+	fill_ave_words_per_sentence(review)
 
