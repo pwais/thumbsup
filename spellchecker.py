@@ -17,3 +17,12 @@ def edits1(word):
 
 def known_edits2(word):
     return set(e2 for e1 in edits1(word) for e2 in edits1(e1) if e2 in DICTIONARY)
+
+# Typo helper function
+def is_typo(word):
+	'''A word is considered a typo whenever it not in the
+	dictionary AND another word that is at edit-distance of 2 or
+	less is in the dictionary.'''
+	if not word in DICTIONARY and known_edits2(word):
+		return True
+	return False

@@ -1,5 +1,5 @@
 import re
-from spellchecker import known_edits2, DICTIONARY
+from spellchecker import is_typo
 import sat_gre_words
 
 def __fill_special_word_freq(review, key, word_set):
@@ -22,15 +22,6 @@ def fill_gre_word_freq(review):
 def fill_sat_word_freq(review):
 	__fill_special_word_freq(review, 'sat_word_freq', sat_gre_words.SAT_WORDS)
 
-# Typo helper functions
-def is_typo(word):
-	'''A word is considered a typo whenever it not in the
-	dictionary AND another word that is at edit-distance of 2 or
-	less is in the dictionary.'''
-	if not word in DICTIONARY and known_edits2(word):
-		return True
-	return False
-
 def fill_review_typos(review):
 	'''Fill compute the number of typos in the text of the review
 	and add it to review["typos"]'''
@@ -41,8 +32,30 @@ def fill_review_typos(review):
 			num_typos += 1
 	review['typos'] = num_typos
 		
+def __fill_word_count(review, key):
+    """The number of words in the review"""
+    words=re.split('\w+',review['text'])
+    review[key] = len(words)-1
+
+def __fill_ave_words_per_sentence(review, key):
+    """Average number of words per sentence"""
+    body=review['text']
+    words=re.split('\w+',body)
+    ends = re.compile('[.!?]+')
+    sentences=[m for m in ends.split(body) if len(m) > 5]
+    review[key] = float(len(words)-1)/len(sentences)
+
+def fill_word_count(review):
+    __fill_word_count(review, 'word_count')
+
+def fill_ave_words_per_sentence(review):
+    __fill_ave_words_per_sentence(review, 'ave_words_per_sent')
+
+# Fill everything
 def fill_all_review_features(review):
 	"""Fill all review features in `review`"""
 	fill_gre_word_freq(review)
 	fill_sat_word_freq(review)
-
+	fill_word_count(review)
+	fill_ave_words_per_sentence(review)
+	fill_review_typos(review)
