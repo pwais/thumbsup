@@ -1,9 +1,14 @@
-# Spellchecker based on the checker written by peter norvig.
+"""Spellchecker based on the checker written by peter norvig.
+See http://norvig.com/spell-correct.html
+"""
+
 import re, collections
+
+import config
 
 def words(text): return re.findall('[a-z]+', text.lower()) 
 
-DICTIONARY = set(words(file('big.txt').read()))
+DICTIONARY = set(words(file(config.SPELLCHECKER_TEXT).read()))
 
 alphabet = 'abcdefghijklmnopqrstuvwxyz'
 

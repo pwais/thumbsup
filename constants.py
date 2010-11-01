@@ -1,5 +1,8 @@
-"""SAT and GRE words collected from a few different webpages.  Note that these
-are not official lists from ETS."""  
+
+
+###################################################################################################
+## SAT and GRE words collected from a few different webpages.  Note that these
+## are NOT official lists from ETS. 
 
 GRE_WORDS = set([
 'bastion',

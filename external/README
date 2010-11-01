@@ -1,0 +1,6 @@
+Obtain the following data and place it in this directory:
+
+ * Peter Norvig's example corpus for his spell checker. Download 
+   http://norvig.com/big.txt
+   and place the file in this directory as 'big.txt'
+

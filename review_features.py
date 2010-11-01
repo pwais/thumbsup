@@ -1,6 +1,8 @@
 import re
+
 from spellchecker import is_typo
-import sat_gre_words
+
+import constants
 
 def __fill_special_word_freq(review, key, word_set):
     """Fill `key` in `review` with the frequency of the 
@@ -17,10 +19,10 @@ def __fill_special_word_freq(review, key, word_set):
     review[key] = float(word_count) / total_num_words
 
 def fill_gre_word_freq(review):
-    __fill_special_word_freq(review, 'gre_word_freq', sat_gre_words.GRE_WORDS)
+    __fill_special_word_freq(review, 'gre_word_freq', constants.GRE_WORDS)
 
 def fill_sat_word_freq(review):
-    __fill_special_word_freq(review, 'sat_word_freq', sat_gre_words.SAT_WORDS)
+    __fill_special_word_freq(review, 'sat_word_freq', constants.SAT_WORDS)
 
 def fill_review_typos(review):
     '''Fill compute the number of typos in the text of the review
