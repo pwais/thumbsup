@@ -15,7 +15,7 @@ if __name__ == '__main__':
 		if review_keys is None:
 			review_keys = set(review.keys())
 
-		fill_review_features(review)
+		fill_all_review_features(review)
 
 		if feature_keys is None:
 			feature_keys = set(review.keys()) - review_keys
