@@ -25,8 +25,8 @@ def fill_sat_word_freq(review):
     __fill_special_word_freq(review, 'sat_word_freq', constants.SAT_WORDS)
 
 def fill_review_typos(review):
-    '''Fill compute the number of typos in the text of the review
-    and add it to review["typos"]'''
+    """Fill compute the number of typos in the text of the review
+    and add it to review["typos"]"""
     num_typos = 0
     words = [word.lower() for word in re.findall('\w+', review['text'])]
     for word in words:
@@ -53,6 +53,11 @@ def fill_word_count(review):
 def fill_ave_words_per_sentence(review):
     __fill_ave_words_per_sentence(review, 'ave_words_per_sent')
 
+def fill_amazon_frac_voted_useful(review):
+    amazon_useful = float(review.get('useful') or 0.0)
+    amazon_outof = float(review.get('outof') or 0.0)
+    review['amazon_frac_voted_useful'] = amazon_useful / amazon_outof if amazon_outof else 0.0
+
 # Fill everything
 def fill_all_review_features(review):
     """Fill all review features in `review`"""
@@ -61,3 +66,4 @@ def fill_all_review_features(review):
     fill_word_count(review)
     fill_ave_words_per_sentence(review)
     fill_review_typos(review)
+    fill_amazon_frac_voted_useful(review)

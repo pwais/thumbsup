@@ -4,7 +4,7 @@ import sys
 
 import simplejson
 
-from review_features import fill_review_features
+from review_features import fill_all_review_features
 
 if __name__ == '__main__':
     
