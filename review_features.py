@@ -47,6 +47,28 @@ def __fill_ave_words_per_sentence(review, key):
     sentences=[m for m in ends.split(body) if len(m) > 5]
     review[key] = float(len(words)-1)/len(sentences)
 
+def __fill_all_caps_words(review, key):
+    """Fill ALL CAPS feature"""
+    body=review['text']
+    words=re.split('\w+',body)
+    num_all_caps = 0
+    for word in words:
+        if word.isupper():
+            num_all_caps += 1
+    review[key] = num_all_caps
+
+def __fill_capitalization_errors(review, key):
+    """Fill Capitalization Errors"""
+    body=review['text']
+    words=re.split('\w+',body)
+    ends = re.compile('[.!?]+')
+    sentences=[m for m in ends.split(body) if len(m) > 5]
+    num_caps_err = 0
+    for sentence in sentences:
+        if(!sentence[0].istitle()):
+            num_caps_err += 1
+    review[key] = num_caps_err
+
 def fill_word_count(review):
     __fill_word_count(review, 'word_count')
 
@@ -58,6 +80,13 @@ def fill_amazon_frac_voted_useful(review):
     amazon_outof = float(review.get('outof') or 0.0)
     review['amazon_frac_voted_useful'] = amazon_useful / amazon_outof if amazon_outof else 0.0
 
+def fill_all_caps_words(review):
+    __fill_word_count_words(review, 'all_caps')
+
+def fill_capitalization_errors(review):
+    __fill_capitalization_errors(review, 'caps_err')
+
+
 # Fill everything
 def fill_all_review_features(review):
     """Fill all review features in `review`"""
@@ -67,3 +96,5 @@ def fill_all_review_features(review):
     fill_ave_words_per_sentence(review)
     fill_review_typos(review)
     fill_amazon_frac_voted_useful(review)
+    fill_all_caps_words(review)
+    fill_capitalization_errors(review)
