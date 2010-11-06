@@ -69,6 +69,12 @@ def __fill_capitalization_errors(review, key):
             num_caps_err += 1
     review[key] = num_caps_err
 
+def __fill_num_urls(review, key):
+    """Fill number of URLs in the review text"""
+    body=review['text']
+    urls = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', body)
+    review[key] = len(urls)
+
 def fill_word_count(review):
     __fill_word_count(review, 'word_count')
 
@@ -86,6 +92,9 @@ def fill_all_caps_words(review):
 def fill_capitalization_errors(review):
     __fill_capitalization_errors(review, 'caps_err')
 
+def fill_num_urls(review):
+    __fill_num_urls(review, 'num_urls')
+    
 
 # Fill everything
 def fill_all_review_features(review):
@@ -98,3 +107,4 @@ def fill_all_review_features(review):
     fill_amazon_frac_voted_useful(review)
     fill_all_caps_words(review)
     fill_capitalization_errors(review)
+    fill_num_urls(review)
