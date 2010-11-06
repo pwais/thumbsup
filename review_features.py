@@ -36,24 +36,24 @@ def fill_review_typos(review):
         
 def __fill_word_count(review, key):
     """The number of words in the review"""
-    words=re.split('\w+',review['text'])
+    words=re.split('\W+',review['text'])
     review[key] = len(words)-1
 
 def __fill_ave_words_per_sentence(review, key):
     """Average number of words per sentence"""
     body=review['text']
-    words=re.split('\w+',body)
-    ends = re.compile('[.!?]+')
+    words=re.split('\W+',body)
+    ends = re.compile('[.!?]+\W+')
     sentences=[m for m in ends.split(body) if len(m) > 5]
     review[key] = float(len(words)-1)/len(sentences)
 
 def __fill_all_caps_words(review, key):
     """Fill ALL CAPS feature"""
     body=review['text']
-    words=re.split('\w+',body)
+    words=re.split('\W+',body)
     num_all_caps = 0
     for word in words:
-        if word.isupper():
+        if word.isupper() and len(word) > 1:
             num_all_caps += 1
     review[key] = num_all_caps
 
@@ -61,11 +61,11 @@ def __fill_capitalization_errors(review, key):
     """Fill Capitalization Errors"""
     body=review['text']
     words=re.split('\w+',body)
-    ends = re.compile('[.!?]+')
+    ends = re.compile('[.!?]+\W+')
     sentences=[m for m in ends.split(body) if len(m) > 5]
     num_caps_err = 0
     for sentence in sentences:
-        if(!sentence[0].istitle()):
+        if not sentence[0].istitle():
             num_caps_err += 1
     review[key] = num_caps_err
 
@@ -87,14 +87,13 @@ def fill_amazon_frac_voted_useful(review):
     review['amazon_frac_voted_useful'] = amazon_useful / amazon_outof if amazon_outof else 0.0
 
 def fill_all_caps_words(review):
-    __fill_word_count_words(review, 'all_caps')
+    __fill_all_caps_words(review, 'all_caps')
 
 def fill_capitalization_errors(review):
     __fill_capitalization_errors(review, 'caps_err')
 
 def fill_num_urls(review):
     __fill_num_urls(review, 'num_urls')
-    
 
 # Fill everything
 def fill_all_review_features(review):
