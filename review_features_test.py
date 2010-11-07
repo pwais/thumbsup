@@ -33,18 +33,23 @@ class FeaturesTests(unittest.TestCase):
         fill_review_typos(test_review)
         assert test_review['typos'] == 6
 
-    def test_fill_price_category(self):
-        # number from the data
+    def test_fill_price_range(self):
+        # numbers from the data
         price_categories = [(28830,0),(43,1),(2,2),(1,3)]
         for pid,cat in price_categories:
             review = {'product_id':pid}
-            fill_review_price_category(review)
-            assert review['price_cat'] == cat
+            fill_review_price_range(review)
+            assert review['price_range'] == cat
 
 class LoaderTests(unittest.TestCase):
 
     def test_load_products(self):
-        pass
+        '''Assumes amazon data for now'''
+        load_products()
+        assert AZ_PRODUCTS
+        for key in AZ_PRODUCTS.iterkeys():
+            assert type(key) == int
+            assert type(AZ_PRODUCTS[key]['amazonprice'])==float 
 
 if __name__ == '__main__':
     unittest.main()

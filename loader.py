@@ -13,15 +13,16 @@ AZ_PRODUCTS = {}
 AZ_CATEGORIES = {}
 
 def load_products():
-    '''Loads the products into AZ_PRODUCTS: a two layer dictionary'''
+    '''Loads the products into AZ_PRODUCTS: a two layer
+    dictionary. Assumes amazon data for now'''
     if AZ_PRODUCTS:
         return
-    keys = ['amazonprice']
+    fields = [('amazonprice',float)]
     for az_product in csv.DictReader(open(AZ_PRODUCTS_CSV)):
         product = {}
-        for key in keys:
-            product[key] = az_product[key]
-        AZ_PRODUCTS[az_product['id']] = product
+        for key,t in fields:
+            product[key] = t(az_product[key])
+        AZ_PRODUCTS[int(az_product['id'])] = product
 
 def load_categories():
     pass

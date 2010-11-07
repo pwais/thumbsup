@@ -33,18 +33,18 @@ def fill_review_typos(review):
             num_typos += 1
     review['typos'] = num_typos
         
-def fill_review_price_category(review):
-    '''assign a price category between 0 (cheap) and 3
-    (expensive). The category is store in review["price_cat"]'''
+def fill_review_price_range(review):
+    '''assign a price range between 0 (cheap) and 3
+    (expensive). The category is store in review["price_range"]'''
     load_products()
     price_categories = (30,80,200)
     amazonprice = AZ_PRODUCTS[review['product_id']]['amazonprice']
-    for cat,price in price_categories:
+    for cat,price in enumerate(price_categories):
         if amazonprice < price:
-            review['price_cat'] = cat
+            review['price_range'] = cat
             break
     else:
-        review['price_cat'] = cat
+        review['price_range'] = 3
 
 def __fill_word_count(review, key):
     """The number of words in the review"""
