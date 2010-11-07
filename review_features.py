@@ -48,16 +48,44 @@ def fill_review_price_range(review):
 
 def __fill_word_count(review, key):
     """The number of words in the review"""
-    words=re.split('\w+',review['text'])
+    words=re.split('\W+',review['text'])
     review[key] = len(words)-1
 
 def __fill_ave_words_per_sentence(review, key):
     """Average number of words per sentence"""
     body=review['text']
-    words=re.split('\w+',body)
-    ends = re.compile('[.!?]+')
+    words=re.split('\W+',body)
+    ends = re.compile('[.!?]+\W+')
     sentences=[m for m in ends.split(body) if len(m) > 5]
     review[key] = float(len(words)-1)/len(sentences)
+
+def __fill_all_caps_words(review, key):
+    """Fill ALL CAPS feature"""
+    body=review['text']
+    words=re.split('\W+',body)
+    num_all_caps = 0
+    for word in words:
+        if word.isupper() and len(word) > 1:
+            num_all_caps += 1
+    review[key] = num_all_caps
+
+def __fill_capitalization_errors(review, key):
+    """Fill Capitalization Errors"""
+    body=review['text']
+    words=re.split('\w+',body)
+    ends = re.compile('[.!?]+\W+')
+    sentences=[m for m in ends.split(body) if len(m) > 5]
+    num_caps_err = 0
+    for sentence in sentences:
+        if not sentence[0].istitle():
+            num_caps_err += 1
+    review[key] = num_caps_err
+
+def __fill_num_urls(review, key):
+    """Fill number of URLs in the review text"""
+    body=review['text']
+    urls = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', body)
+    review[key] = len(urls)
 
 def fill_word_count(review):
     __fill_word_count(review, 'word_count')
@@ -70,6 +98,15 @@ def fill_amazon_frac_voted_useful(review):
     amazon_outof = float(review.get('outof') or 0.0)
     review['amazon_frac_voted_useful'] = amazon_useful / amazon_outof if amazon_outof else 0.0
 
+def fill_all_caps_words(review):
+    __fill_all_caps_words(review, 'all_caps')
+
+def fill_capitalization_errors(review):
+    __fill_capitalization_errors(review, 'caps_err')
+
+def fill_num_urls(review):
+    __fill_num_urls(review, 'num_urls')
+
 # Fill everything
 def fill_all_review_features(review):
     """Fill all review features in `review`"""
@@ -79,3 +116,6 @@ def fill_all_review_features(review):
     fill_ave_words_per_sentence(review)
     fill_review_typos(review)
     fill_amazon_frac_voted_useful(review)
+    fill_all_caps_words(review)
+    fill_capitalization_errors(review)
+    fill_num_urls(review)
