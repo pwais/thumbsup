@@ -22,7 +22,7 @@ if __name__ == '__main__':
         feature_rows.append(simplejson.loads(line.strip()))
     
     def to_svm_input_line(feature_row):
-        label = str(int(feature_row[LABEL_FEATURE] > 0.5))
+        label = str(2*int(feature_row[LABEL_FEATURE] > 0.5) - 1)
         values = []
         for key_idx, key in enumerate(INPUT_FEATURES):
             values.append("%s:%s" % (key_idx + 1, feature_row[key]))

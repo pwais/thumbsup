@@ -7,11 +7,9 @@ def __fill_special_word_freq(review, key, word_set):
     """Fill `key` in `review` with the frequency of the 
     of review words that appear in `word_set`."""
 
-    iter_matches = re.finditer("(\w+)", review['text'])
-    iter_words = (m.groups()[0] for m in iter_matches)
     word_count = 0
     total_num_words = 0
-    for word in iter_words:
+    for word in re.finditer("\w+", review['text']):
         total_num_words += 1
         if word.lower() in word_set:
             word_count += 1
