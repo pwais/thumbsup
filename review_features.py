@@ -1,7 +1,9 @@
 import re
+
 import constants
 from spellchecker import is_typo
 from loader import *
+from util import anew_scoring
 
 def __fill_special_word_freq(review, key, word_set):
     """Fill `key` in `review` with the frequency of the 
@@ -9,7 +11,7 @@ def __fill_special_word_freq(review, key, word_set):
 
     word_count = 0
     total_num_words = 0
-    for word in re.finditer("\w+", review['text']):
+    for word in re.findall("\w+", review['text']):
         total_num_words += 1
         if word.lower() in word_set:
             word_count += 1
@@ -44,52 +46,18 @@ def fill_review_price_range(review):
     else:
         review['price_range'] = 3
 
-def __fill_word_count(review, key):
+def fill_word_count(review):
     """The number of words in the review"""
     words=re.split('\W+',review['text'])
-    review[key] = len(words)-1
+    review['word_count'] = len(words)-1
 
-def __fill_ave_words_per_sentence(review, key):
+def fill_ave_words_per_sentence(review):
     """Average number of words per sentence"""
     body=review['text']
     words=re.split('\W+',body)
     ends = re.compile('[.!?]+\W+')
     sentences=[m for m in ends.split(body) if len(m) > 5]
-    review[key] = float(len(words)-1)/len(sentences)
-
-def __fill_all_caps_words(review, key):
-    """Fill ALL CAPS feature"""
-    body=review['text']
-    words=re.split('\W+',body)
-    num_all_caps = 0
-    for word in words:
-        if word.isupper() and len(word) > 1:
-            num_all_caps += 1
-    review[key] = num_all_caps
-
-def __fill_capitalization_errors(review, key):
-    """Fill Capitalization Errors"""
-    body=review['text']
-    words=re.split('\w+',body)
-    ends = re.compile('[.!?]+\W+')
-    sentences=[m for m in ends.split(body) if len(m) > 5]
-    num_caps_err = 0
-    for sentence in sentences:
-        if not sentence[0].istitle():
-            num_caps_err += 1
-    review[key] = num_caps_err
-
-def __fill_num_urls(review, key):
-    """Fill number of URLs in the review text"""
-    body=review['text']
-    urls = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', body)
-    review[key] = len(urls)
-
-def fill_word_count(review):
-    __fill_word_count(review, 'word_count')
-
-def fill_ave_words_per_sentence(review):
-    __fill_ave_words_per_sentence(review, 'ave_words_per_sent')
+    review['ave_words_per_sent'] = float(len(words)-1)/len(sentences)
 
 def fill_amazon_frac_voted_useful(review):
     amazon_useful = float(review.get('useful') or 0.0)
@@ -97,13 +65,47 @@ def fill_amazon_frac_voted_useful(review):
     review['amazon_frac_voted_useful'] = amazon_useful / amazon_outof if amazon_outof else 0.0
 
 def fill_all_caps_words(review):
-    __fill_all_caps_words(review, 'all_caps')
+    """Fill ALL CAPS feature"""
+    body = review['text']
+    words = re.split('\W+', body)
+    num_all_caps = 0
+    for word in words:
+        if word.isupper() and len(word) > 1:
+            num_all_caps += 1
+    review['all_caps'] = num_all_caps
 
 def fill_capitalization_errors(review):
-    __fill_capitalization_errors(review, 'caps_err')
+    """Fill Capitalization Errors"""
+    body = review['text']
+    words = re.split('\w+', body)
+    ends = re.compile('[.!?]+\W+')
+    sentences=[m for m in ends.split(body) if len(m) > 5]
+    num_caps_err = 0
+    for sentence in sentences:
+        if not sentence[0].istitle():
+            num_caps_err += 1
+    review['caps_err'] = num_caps_err
 
 def fill_num_urls(review):
-    __fill_num_urls(review, 'num_urls')
+    """Fill number of URLs in the review text"""
+    body=review['text']
+    urls = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', body)
+    review['num_urls'] = len(urls)
+
+def fill_valence_score(review):
+    """Fill ANEW valence weighted score"""
+    review['valence_score'] = anew_scoring.weighted_freq_score(re.findall("\w+", review['text']), 
+                                                               'valence_mean')
+
+def fill_arousal_score(review):
+    """Fill ANEW arousal weighted score"""
+    review['arousal_score'] = anew_scoring.weighted_freq_score(re.findall("\w+", review['text']), 
+                                                               'arousal_mean')
+    
+def fill_dominance_score(review):
+    """Fill ANEW dominance weighted score"""
+    review['dominance_score'] = anew_scoring.weighted_freq_score(re.findall("\w+", review['text']), 
+                                                                 'dominance_mean')
 
 # Fill everything
 def fill_all_review_features(review):
@@ -117,3 +119,6 @@ def fill_all_review_features(review):
     fill_all_caps_words(review)
     fill_capitalization_errors(review)
     fill_num_urls(review)
+    fill_valence_score(review)
+    fill_arousal_score(review)
+    fill_dominance_score(review)

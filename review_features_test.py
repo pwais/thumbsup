@@ -2,6 +2,7 @@ import random
 import unittest
 
 from review_features import *
+from util import anew_scoring
 
 test_review = {}
 # review with 6 typos.
@@ -56,6 +57,15 @@ class FeaturesTests(unittest.TestCase):
     def test_fill_capitalization_errors(self):
         fill_capitalization_errors(test_review)
         assert test_review['caps_err'] == 2
+    
+    def test_anew_scoring(self):
+        fill_valence_score(test_review)
+        fill_arousal_score(test_review)
+        fill_dominance_score(test_review)
+        # The test review contains only one valence word
+        assert test_review['valence_score'] == anew_scoring.ANEW_WORD_MAP['wine']['valence_mean']
+        assert test_review['arousal_score'] == anew_scoring.ANEW_WORD_MAP['wine']['arousal_mean']
+        assert test_review['dominance_score'] == anew_scoring.ANEW_WORD_MAP['wine']['dominance_mean']
 
 class LoaderTests(unittest.TestCase):
 
