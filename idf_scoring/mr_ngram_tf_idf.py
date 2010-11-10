@@ -25,7 +25,9 @@ STOP_WORDS = frozenset(['a', 'about', 'also', 'am', 'an', 'and', 'any', 'are', '
 'my', 'of', 'on', 'or', 'org', 'our', 'ours', 'she', "she'd", "she'll", "she's", 'some', 'than', 
 'that', 'the', 'their', 'them', 'then', 'there', 'these', 'they', "they'd", "they'll", "they're", 
 'this', 'those', 'to', 'us', 'was', 'we', "we'd", "we'll", "we're", 'were', 'what', 'where', 
-'which', 'who', 'will', 'with', 'would', 'you', 'your', 'yours'])
+'which', 'who', 'will', 'with', 'would', 'you', 'your', "you're", 'yours',
+
+'all', 'yes'])
 
 STOP_NGRAMS = frozenset([])
 
@@ -88,8 +90,19 @@ class MRNgramIDFUtility(MRJob):
         """Yield a stream of ngrams from the reviews in the given `doc`"""
         
         # Extract words from the review
-        words = [wd.lower() for wd in re.findall(WORD_RE, doc['text'])
-                            if wd.lower() not in STOP_WORDS]
+        words = []
+        for wd in re.findall(WORD_RE, doc['text']):
+            wd = wd.lower()
+            if wd in STOP_WORDS:
+                continue
+            wd = wd.replace("'", "")
+            wd = wd.replace("-", "")
+            wd = wd.replace("_", "")
+            if len(wd) <= 2:
+                continue
+            if re.match('\d+', wd):
+                continue
+            words.append(wd)
 
         # Now emit all ngrams
         ngram_lengths = range(self.options.min_ngram_length, 
