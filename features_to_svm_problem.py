@@ -14,7 +14,11 @@ INPUT_FEATURES = ('gre_word_freq',
                   'sat_word_freq',
                   'ave_words_per_sent',
                   'word_count',
-                  'typos')
+                  #'typos',  skip this feature for now, it's slow
+				  'valence_score',
+				  'num_urls',
+				  'caps_err',
+				  'all_caps')
 
 if __name__ == '__main__':
     feature_rows = []
