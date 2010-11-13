@@ -2,8 +2,6 @@ import csv
 import os
 import sys
 
-import simplejson
-
 from review_features import fill_all_review_features
 
 if __name__ == '__main__':
@@ -11,6 +9,7 @@ if __name__ == '__main__':
     review_keys = None
     feature_keys = None
 
+	header = True
     for review in csv.DictReader(sys.stdin):
         if review_keys is None:
             review_keys = set(review.keys())
@@ -24,4 +23,7 @@ if __name__ == '__main__':
             if key != 'id':
                 del review[key]
         
-        print >>sys.stdout, simplejson.dumps(review)
+		if header:
+			print >>sys.stdout, ",".join(feature_keys)
+		
+        print >>sys.stdout, ",".join(review[k] for k in feature_keys)
