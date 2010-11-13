@@ -153,7 +153,7 @@ def fill_all_review_features(review):
     fill_sat_word_freq(review)
     fill_word_count(review)
     fill_ave_words_per_sentence(review)
-    fill_review_typos(review)
+    #fill_review_typos(review)   TODO make this faster
     fill_amazon_frac_voted_useful(review)
     fill_all_caps_words(review)
     fill_capitalization_errors(review)
