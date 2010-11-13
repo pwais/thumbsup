@@ -23,6 +23,45 @@ def fill_gre_word_freq(review):
 def fill_sat_word_freq(review):
     __fill_special_word_freq(review, 'sat_word_freq', constants.SAT_WORDS)
 
+def fill_illustration_word_freq(review):
+    __fill_special_word_freq(review, 'illustration_word_freq', constants.ILLUSTRATION)
+
+def fill_contrast_word_freq(review):
+    __fill_special_word_freq(review, 'contrast_word_freq', constants.CONTRAST)
+
+def fill_addition_word_freq(review):
+    __fill_special_word_freq(review, 'addition_word_freq', constants.ADDITION)
+
+def fill_time_word_freq(review):
+    __fill_special_word_freq(review, 'time_word_freq', constants.TIME)
+    
+def fill_space_word_freq(review):
+    __fill_special_word_freq(review, 'space_word_freq', constants.SPACE)
+
+def fill_concession_word_freq(review):
+    __fill_special_word_freq(review, 'concession_word_freq', constants.CONCESSION)
+
+def fill_comparison_word_freq(review):
+    __fill_special_word_freq(review, 'comparision_word_freq', constants.COMPARISON)
+
+def fill_emphasis_word_freq(review):
+    __fill_special_word_freq(review, 'emphasis_word_freq', constants.EMPHASIS)
+
+def fill_details_word_freq(review):
+    __fill_special_word_freq(review, 'details_word_freq', constants.DETAILS)
+
+def fill_examples_word_freq(review):
+    __fill_special_word_freq(review, 'examples_word_freq', constants.EXAMPLES)
+
+def fill_consequence_word_freq(review):
+    __fill_special_word_freq(review, 'consequence_word_freq', constants.CONSEQUENCE)
+
+def fill_summary_word_freq(review):
+    __fill_special_word_freq(review, 'summary_word_freq', constants.SUMMARY)
+
+def fill_suggestion_word_freq(review):
+    __fill_special_word_freq(review, 'suggestion_word_freq', constants.SUGGESTION)
+
 def fill_review_typos(review):
     """compute the number of typos in the text of the review
     and add it to review["typos"]"""
@@ -122,3 +161,16 @@ def fill_all_review_features(review):
     fill_valence_score(review)
     fill_arousal_score(review)
     fill_dominance_score(review)
+    fill_illustration_word_freq(review)
+    fill_contrast_word_freq(review)
+    fill_addition_word_freq(review)
+    fill_time_word_freq(review)
+    fill_space_word_freq(review)
+    fill_concession_word_freq(review)
+    fill_comparison_word_freq(review)
+    fill_emphasis_word_freq(review)
+    fill_details_word_freq(review)
+    fill_examples_word_freq(review)
+    fill_consequence_word_freq(review)
+    fill_summary_word_freq(review)
+    fill_suggestion_word_freq(review)
