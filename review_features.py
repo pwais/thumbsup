@@ -102,6 +102,7 @@ def fill_amazon_frac_voted_useful(review):
     amazon_useful = float(review.get('useful') or 0.0)
     amazon_outof = float(review.get('outof') or 0.0)
     review['amazon_frac_voted_useful'] = amazon_useful / amazon_outof if amazon_outof else 0.0
+    review['amazon_bin_voted_useful'] = int(review['amazon_frac_voted_useful'] + 0.5)
 
 def fill_all_caps_words(review):
     """Fill ALL CAPS feature"""

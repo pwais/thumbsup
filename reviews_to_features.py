@@ -9,7 +9,7 @@ if __name__ == '__main__':
     review_keys = None
     feature_keys = None
 
-	header = True
+    header = True
     for review in csv.DictReader(sys.stdin):
         if review_keys is None:
             review_keys = set(review.keys())
@@ -23,7 +23,8 @@ if __name__ == '__main__':
             if key != 'id':
                 del review[key]
         
-		if header:
-			print >>sys.stdout, ",".join(feature_keys)
+        if header:
+            print >>sys.stdout, ",".join(feature_keys)
+            header = False
 		
-        print >>sys.stdout, ",".join(review[k] for k in feature_keys)
+        print >>sys.stdout, ",".join(str(review[k]) for k in feature_keys)
