@@ -15,7 +15,10 @@ def __fill_special_word_freq(review, key, word_set):
         total_num_words += 1
         if word.lower() in word_set:
             word_count += 1
-    review[key] = float(word_count) / total_num_words
+    if total_num_words > 0:
+        review[key] = float(word_count) / total_num_words
+    else:
+        review[key] = 0.0
 
 def fill_gre_word_freq(review):
     __fill_special_word_freq(review, 'feature_gre_word_freq', constants.GRE_WORDS)
@@ -96,13 +99,22 @@ def fill_ave_words_per_sentence(review):
     words=re.split('\W+',body)
     ends = re.compile('[.!?]+\W+')
     sentences=[m for m in ends.split(body) if len(m) > 5]
-    review['feature_ave_words_per_sent'] = float(len(words)-1)/len(sentences)
+    if len(sentences) > 0:
+        review['feature_ave_words_per_sent'] = float(len(words)-1)/len(sentences)
+    else:
+        review['feature_ave_words_per_sent'] = 0
 
 def fill_amazon_frac_voted_useful(review):
     amazon_useful = float(review.get('useful') or 0.0)
     amazon_outof = float(review.get('outof') or 0.0)
     review['amazon_frac_voted_useful'] = amazon_useful / amazon_outof if amazon_outof else 0.0
     review['amazon_bin_voted_useful'] = int(review['amazon_frac_voted_useful'] + 0.5)
+
+def fill_amazon_useful_rank(review):
+    review['amazon_useful_rank'] = float(review.get('useful') or 0.0) / constants.AMAZON_MAX_USEFUL_VOTES
+
+def fill_yelp_useful_rank(review):
+    review['yelp_useful_rank'] = float(review.get('u_count') or 0.0) / constants.YELP_MAX_USEFUL_VOTES
 
 def fill_all_caps_words(review):
     """Fill ALL CAPS feature"""
@@ -175,3 +187,5 @@ def fill_all_review_features(review):
     fill_consequence_word_freq(review)
     fill_summary_word_freq(review)
     fill_suggestion_word_freq(review)
+    fill_amazon_useful_rank(review)
+    fill_yelp_useful_rank(review)
