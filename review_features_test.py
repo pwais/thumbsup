@@ -47,7 +47,7 @@ class FeaturesTests(unittest.TestCase):
         assert test_review['feature_num_urls'] == 1
         
     def test_fill_all_caps(self):
-        fill_word_count(review)
+        fill_word_count(test_review)
         fill_all_caps_words(test_review)
         assert test_review['feature_all_caps'] == 4.0/test_review['feature_word_count']
 
