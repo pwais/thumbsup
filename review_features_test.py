@@ -32,7 +32,7 @@ class FeaturesTests(unittest.TestCase):
 
     def test_fill_review_typos(self):
         fill_review_typos(test_review)
-        assert test_review['typos'] == 6
+        assert test_review['feature_typos'] == 6
 
     def test_fill_price_range(self):
         # numbers from the data
@@ -40,32 +40,34 @@ class FeaturesTests(unittest.TestCase):
         for pid,cat in price_categories:
             review = {'product_id':pid}
             fill_review_price_range(review)
-            assert review['price_range'] == cat
+            assert review['feature_price_range'] == cat
 
     def test_fill_num_urls(self):
         fill_num_urls(test_review)
-        assert test_review['num_urls'] == 1
+        assert test_review['feature_num_urls'] == 1
         
     def test_fill_all_caps(self):
+        fill_word_count(review)
         fill_all_caps_words(test_review)
-        assert test_review['all_caps'] == 4
+        assert test_review['feature_all_caps'] == 4.0/test_review['feature_word_count']
 
     def test_word_count(self):
         fill_word_count(test_review)
-        assert test_review['word_count'] == 44
+        assert test_review['feature_word_count'] == 44
 
     def test_fill_capitalization_errors(self):
+        fill_word_count(test_review)
         fill_capitalization_errors(test_review)
-        assert test_review['caps_err'] == 2
+        assert test_review['feature_caps_err'] == 2.0/test_review['feature_word_count']
     
     def test_anew_scoring(self):
         fill_valence_score(test_review)
         fill_arousal_score(test_review)
         fill_dominance_score(test_review)
         # The test review contains only one valence word
-        assert test_review['valence_score'] == anew_scoring.ANEW_WORD_MAP['wine']['valence_mean']
-        assert test_review['arousal_score'] == anew_scoring.ANEW_WORD_MAP['wine']['arousal_mean']
-        assert test_review['dominance_score'] == anew_scoring.ANEW_WORD_MAP['wine']['dominance_mean']
+        assert test_review['feature_valence_score'] == anew_scoring.ANEW_WORD_MAP['wine']['valence_mean']
+        assert test_review['feature_arousal_score'] == anew_scoring.ANEW_WORD_MAP['wine']['arousal_mean']
+        assert test_review['feature_dominance_score'] == anew_scoring.ANEW_WORD_MAP['wine']['dominance_mean']
 
 class LoaderTests(unittest.TestCase):
 

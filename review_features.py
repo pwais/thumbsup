@@ -8,7 +8,6 @@ from util import anew_scoring
 def __fill_special_word_freq(review, key, word_set):
     """Fill `key` in `review` with the frequency of the 
     of review words that appear in `word_set`."""
-
     word_count = 0
     total_num_words = 0
     for word in re.findall("\w+", review['text']):
@@ -104,6 +103,16 @@ def fill_ave_words_per_sentence(review):
     else:
         review['feature_ave_words_per_sent'] = 0
 
+def fill_ave_length_of_words(review):
+    body = review['text']
+    words = re.split('\W+', body)
+    total_length = 0
+    for word in words:
+        length = len(word)
+        if length > 1:
+            total_length += length
+    review['feature_ave_word_length'] = float(total_length)/review['feature_word_count']
+            
 def fill_amazon_frac_voted_useful(review):
     amazon_useful = float(review.get('useful') or 0.0)
     amazon_outof = float(review.get('outof') or 0.0)
