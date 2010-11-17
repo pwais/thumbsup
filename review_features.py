@@ -124,7 +124,7 @@ def fill_all_caps_words(review):
     for word in words:
         if word.isupper() and len(word) > 1:
             num_all_caps += 1
-    review['feature_all_caps'] = num_all_caps/review['feature_word_count']
+    review['feature_all_caps'] = float(num_all_caps)/review['feature_word_count']
 
 def fill_capitalization_errors(review):
     """Fill Capitalization Errors"""
@@ -136,7 +136,7 @@ def fill_capitalization_errors(review):
     for sentence in sentences:
         if not sentence[0].istitle():
             num_caps_err += 1
-    review['feature_caps_err'] = num_caps_err/review['feature_word_count']
+    review['feature_caps_err'] = float(num_caps_err)/review['feature_word_count']
 
 def fill_num_urls(review):
     """Fill number of URLs in the review text"""
