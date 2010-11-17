@@ -70,7 +70,7 @@ def fill_review_typos(review):
     for word in words:
         if is_typo(word):
             num_typos += 1
-    review['typos'] = num_typos
+    review['typos'] = num_typos#/review['word_count']
         
 def fill_review_price_range(review):
     '''assign a price range between 0 (cheap) and 3
@@ -111,7 +111,7 @@ def fill_all_caps_words(review):
     for word in words:
         if word.isupper() and len(word) > 1:
             num_all_caps += 1
-    review['all_caps'] = num_all_caps
+    review['all_caps'] = num_all_caps/review['word_count']
 
 def fill_capitalization_errors(review):
     """Fill Capitalization Errors"""
@@ -123,7 +123,7 @@ def fill_capitalization_errors(review):
     for sentence in sentences:
         if not sentence[0].istitle():
             num_caps_err += 1
-    review['caps_err'] = num_caps_err
+    review['caps_err'] = num_caps_err/review['word_count']
 
 def fill_num_urls(review):
     """Fill number of URLs in the review text"""
@@ -149,9 +149,9 @@ def fill_dominance_score(review):
 # Fill everything
 def fill_all_review_features(review):
     """Fill all review features in `review`"""
+    fill_word_count(review)
     fill_gre_word_freq(review)
     fill_sat_word_freq(review)
-    fill_word_count(review)
     fill_ave_words_per_sentence(review)
     fill_review_typos(review)
     fill_amazon_frac_voted_useful(review)
