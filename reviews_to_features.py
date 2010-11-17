@@ -5,6 +5,7 @@ import sys
 import simplejson
 
 from review_features import fill_all_review_features
+from reviews_features import fill_all_reviews_features
 
 def stream_reviews_from_csv():
     for review in csv.DictReader(sys.stdin):
@@ -26,19 +27,28 @@ if __name__ == '__main__':
     feature_keys = None
 
     header = True
+    reviews = []
     for review in streamer():
+        
+        # Record non-feature keys
         if review_keys is None:
             review_keys = set(review.keys())
 
         fill_all_review_features(review)
+        reviews.append(review)
+    
+    print >>sys.stderr, "Read all reviews"
+    
+    fill_all_reviews_features(reviews)
 
+    for review in reviews:
+        
+        # Compute and write out only feature keys
         if feature_keys is None:
             feature_keys = set(review.keys()) - review_keys
-
-        for key in review_keys:
-            if key != 'id':
-                del review[key]
+            feature_keys.add('id')
         
+        # Print the CSV header exactly once
         if header:
             print >>sys.stdout, ",".join(feature_keys)
             header = False
