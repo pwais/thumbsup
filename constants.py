@@ -1,4 +1,9 @@
 
+# max(useful) of the first 15,000 reviews in the CSV file
+AMAZON_MAX_USEFUL_VOTES = 99
+
+# max(u_count) of all Yelp reviews
+YELP_MAX_USEFUL_VOTES = 72
 
 ###################################################################################################
 ## SAT and GRE words collected from a few different webpages.  Note that these
