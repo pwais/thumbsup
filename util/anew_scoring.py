@@ -44,5 +44,14 @@ def weighted_freq_score(words, anew_key):
 def weighted_normalized_freq_score(words, anew_key):
     """Normalized version of the above function"""
     min, max = ANEW_KEY_TO_MIN_MAX[anew_key]
-    freq_score = weighted_freq_score(words, anew_key)
-    return float(freq_score + min) / max
+    total_score = 0.0
+    total_freq = 0
+    for wd in words:
+        wd = wd.lower()
+        if wd in ANEW_WORD_MAP:
+            total_score += ANEW_WORD_MAP[wd][anew_key] + min / max
+            total_freq += 1
+    if total_freq:
+        return total_score / total_freq
+    else:
+        return 0.0
