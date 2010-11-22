@@ -41,16 +41,11 @@ if __name__ == '__main__':
     
     fill_all_reviews_features(reviews)
 
-    for review in reviews:
-        
-        # Compute and write out only feature keys
-        if feature_keys is None:
-            feature_keys = set(review.keys()) - review_keys
-            feature_keys.add('id')
-        
+    for review in reviews:        
         # Print the CSV header exactly once
         if header:
             print >>sys.stdout, ",".join(feature_keys)
             header = False
-		
-        print >>sys.stdout, ",".join(str(review[k]) for k in feature_keys)
+
+        print >>sys.stdout, ",".join(str(review[k]) for k in review.keys()
+                                     if k.startswith('feature'))
