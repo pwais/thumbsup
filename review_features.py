@@ -1,9 +1,10 @@
+import math
 import re
 
 import constants
 from spellchecker import is_typo
-from loader import *
 from util import anew_scoring
+from util.loader import *
 
 def __fill_special_word_freq(review, key, word_set):
     """Fill `key` in `review` with the frequency of the 
@@ -65,32 +66,43 @@ def fill_suggestion_word_freq(review):
     __fill_special_word_freq(review, 'feature_suggestion_word_freq', constants.SUGGESTION)
 
 def fill_review_typos(review):
-    """compute the number of typos in the text of the review
+    """Compute the frequency of typos in the text of the review
     and add it to review["typos"]"""
     num_typos = 0
     words = [word.lower() for word in re.findall('\w+', review['text'])]
     for word in words:
         if is_typo(word):
             num_typos += 1
-    review['feature_typos'] = num_typos
+    review['feature_typos'] = float(num_typos) / len(words)
         
-def fill_review_price_range(review):
-    '''assign a price range between 0 (cheap) and 3
-    (expensive). The category is store in review["price_range"]'''
-    load_products()
-    price_categories = (30,80,200)
-    amazonprice = AZ_PRODUCTS[review['product_id']]['amazonprice']
-    for cat,price in enumerate(price_categories):
-        if amazonprice < price:
-            review['feature_price_range'] = cat
-            break
-    else:
-        review['feature_price_range'] = 3
+def fill_price_range(review):
+    """Assign a price range between 0 (cheap) and 1 (expensive)."""
+    load_az_products()
+    load_yelp_bizes()
+    
+    def fill_amazon_price(review):
+        price_scores = ((30, 0.2), (80, 0.5), (200, 0.9))
+        amazonprice = int(AZ_PRODUCTS[review['product_id']]['amazonprice'])
+        for price, score in price_scores:
+            if amazonprice < price:
+                review['feature_price_range'] = score
+                break
+        else:
+            review['feature_price_range'] = 1.0
+    
+    def fill_yelp_price(review):
+        yelpprice = int(YELP_BUSINESSES[review['biz_id']]['price'])
+        review['feature_price_range'] = float(yelpprice) / 4
+
+    if 'product_id' in review:
+        fill_amazon_price(review)
+    elif 'biz_id' in review:
+        fill_yelp_price(review)
 
 def fill_word_count(review):
     """The number of words in the review"""
-    words=re.split('\W+',review['text'])
-    review['feature_word_count'] = len(words)-1
+    words = re.split('\W+',review['text'])
+    review['word_count'] = len(words) - 1
 
 def fill_ave_words_per_sentence(review):
     """Average number of words per sentence"""
@@ -99,9 +111,9 @@ def fill_ave_words_per_sentence(review):
     ends = re.compile('[.!?]+\W+')
     sentences=[m for m in ends.split(body) if len(m) > 5]
     if len(sentences) > 0:
-        review['feature_ave_words_per_sent'] = float(len(words)-1)/len(sentences)
+        review['mean_words_per_sent'] = float(len(words)-1)/len(sentences)
     else:
-        review['feature_ave_words_per_sent'] = 0
+        review['mean_words_per_sent'] = 0
 
 def fill_ave_length_of_words(review):
     body = review['text']
@@ -111,19 +123,13 @@ def fill_ave_length_of_words(review):
         length = len(word)
         if length > 1:
             total_length += length
-    review['feature_ave_word_length'] = float(total_length)/review['feature_word_count']
+    review['mean_word_length'] = float(total_length)/review['word_count']
             
 def fill_amazon_frac_voted_useful(review):
     amazon_useful = float(review.get('useful') or 0.0)
     amazon_outof = float(review.get('outof') or 0.0)
     review['amazon_frac_voted_useful'] = amazon_useful / amazon_outof if amazon_outof else 0.0
     review['amazon_bin_voted_useful'] = int(review['amazon_frac_voted_useful'] + 0.5)
-
-def fill_amazon_useful_rank(review):
-    review['amazon_useful_rank'] = float(review.get('useful') or 0.0) / constants.AMAZON_MAX_USEFUL_VOTES
-
-def fill_yelp_useful_rank(review):
-    review['yelp_useful_rank'] = float(review.get('u_count') or 0.0) / constants.YELP_MAX_USEFUL_VOTES
 
 def fill_all_caps_words(review):
     """Fill ALL CAPS feature"""
@@ -133,7 +139,7 @@ def fill_all_caps_words(review):
     for word in words:
         if word.isupper() and len(word) > 1:
             num_all_caps += 1
-    review['feature_all_caps'] = float(num_all_caps)/review['feature_word_count']
+    review['feature_all_caps'] = float(num_all_caps)/review['word_count']
 
 def fill_capitalization_errors(review):
     """Fill Capitalization Errors"""
@@ -145,27 +151,30 @@ def fill_capitalization_errors(review):
     for sentence in sentences:
         if not sentence[0].istitle():
             num_caps_err += 1
-    review['feature_caps_err'] = float(num_caps_err)/review['feature_word_count']
+    review['feature_caps_err'] = float(num_caps_err)/review['word_count']
 
 def fill_num_urls(review):
     """Fill number of URLs in the review text"""
     body=review['text']
     urls = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', body)
-    review['feature_num_urls'] = len(urls)
+    review['num_urls'] = len(urls)
 
 def fill_valence_score(review):
     """Fill ANEW valence weighted score"""
-    review['feature_valence_score'] = anew_scoring.weighted_freq_score(re.findall("\w+", review['text']), 
+    review['feature_valence_score'] = anew_scoring.weighted_normalized_freq_score(
+                                                               re.findall("\w+", review['text']), 
                                                                'valence_mean')
 
 def fill_arousal_score(review):
     """Fill ANEW arousal weighted score"""
-    review['feature_arousal_score'] = anew_scoring.weighted_freq_score(re.findall("\w+", review['text']), 
+    review['feature_arousal_score'] = anew_scoring.weighted_normalized_freq_score(
+                                                               re.findall("\w+", review['text']), 
                                                                'arousal_mean')
     
 def fill_dominance_score(review):
     """Fill ANEW dominance weighted score"""
-    review['feature_dominance_score'] = anew_scoring.weighted_freq_score(re.findall("\w+", review['text']), 
+    review['feature_dominance_score'] = anew_scoring.weighted_normalized_freq_score(
+                                                                 re.findall("\w+", review['text']), 
                                                                  'dominance_mean')
 
 # Fill everything
@@ -196,5 +205,4 @@ def fill_all_review_features(review):
     fill_consequence_word_freq(review)
     fill_summary_word_freq(review)
     fill_suggestion_word_freq(review)
-    fill_amazon_useful_rank(review)
-    fill_yelp_useful_rank(review)
+    fill_price_range(review)
