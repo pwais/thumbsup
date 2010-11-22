@@ -15,9 +15,9 @@ def _fill_normalized(reviews, fill_key, feature_key):
 
 def fill_useful_percentile(reviews):
     if 'useful' in reviews[0]:
-        _fill_percentile(reviews, 'useful_percentile', 'useful')
+        _fill_percentile(reviews, 'label_useful_percentile', 'useful')
     elif 'u_count' in reviews[0]:
-        _fill_percentile(reviews, 'useful_percentile', 'u_count')
+        _fill_percentile(reviews, 'label_useful_percentile', 'u_count')
 
 def fill_normalized_word_count(reviews):
     _fill_normalized(reviews, 'feature_normalized_word_count', 'word_count')

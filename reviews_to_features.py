@@ -16,6 +16,9 @@ def stream_reviews_from_json():
     for review in review_data:
         yield review
 
+def exportable_key(key):
+    return key.startswith('feature') or key.startswith('label')
+
 if __name__ == '__main__':
     source = sys.argv[1]
     if source == 'csv':
@@ -41,11 +44,12 @@ if __name__ == '__main__':
     
     fill_all_reviews_features(reviews)
 
-    for review in reviews:        
+    for review in reviews:
+        
         # Print the CSV header exactly once
         if header:
-            print >>sys.stdout, ",".join(feature_keys)
+            print >>sys.stdout, ",".join(k for k in review.keys() if exportable_key(k))
             header = False
 
         print >>sys.stdout, ",".join(str(review[k]) for k in review.keys()
-                                     if k.startswith('feature'))
+                                     if exportable_key(k))
