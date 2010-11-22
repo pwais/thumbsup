@@ -6,6 +6,9 @@ Obtain the following data and place it in this directory:
 
 
 Notes on other data files in this directory:
- * ANEW_data.json extracted from "Affective Norms for English Words (ANEW):
+ * ANEW_word_map.json extracted from "Affective Norms for English Words (ANEW):
  	Instruction Manual and Affective Ratings" by Bradley et al.:
  	http://dionysus.psych.wisc.edu/methods/Stim/ANEW/ANEW.pdf
+ 	
+ 	(This file is OK to redistribute since the information is publicly available)
+

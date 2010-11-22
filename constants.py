@@ -1,4 +1,9 @@
 
+# max(useful) of the first 15,000 reviews in the CSV file
+AMAZON_MAX_USEFUL_VOTES = 99
+
+# max(u_count) of all Yelp reviews
+YELP_MAX_USEFUL_VOTES = 72
 
 ###################################################################################################
 ## SAT and GRE words collected from a few different webpages.  Note that these
@@ -9913,4 +9918,254 @@ SAT_WORDS = set([
 'zodiac'
 ])
 
+# Transitional words and phrases
+# http://writing2.richmond.edu/writing/wweb/trans1.html
+# ILLUSTRATION, CONTRAST, ADDITION, TIME, SPACE, CONCESSION, COMPARISON, EMPHASIS, DETAILS, EXAMPLES, CONSEQUENCE, SUMMARY, SUGGESTION
+ILLUSTRATION = set([
+    'thus',
+    'for example',
+    'for instance',
+    'namely',
+    'to illustrate',
+    'in other words',
+    'in particular',
+    'specifically',
+    'such as'
+    ])
 
+CONTRAST = set([
+    'on the contrary',
+    'contrarily',
+    'notwithstanding',
+    'but',
+    'however',
+    'nevertheless',
+    'in spite of',
+    'in contrast',
+    'yet',
+    'on one hand',
+    'on the other hand',
+    'rather',
+    'or',
+    'nor',
+    'conversely',
+    'at the same time',
+    'while this may be true'
+    ])
+
+ADDITION = set([
+    'and',
+    'in addition to',
+    'furthermore',
+    'moreover',
+    'besides',
+    'than',
+    'too',
+    'also',
+    'both-and',
+    'another',
+    'equally important',
+    'first',
+    'second',
+    'again',
+    'further',
+    'last',
+    'finally',
+    'not only-but also',
+    'as well as',
+    'in the second place',
+    'next',
+    'likewise',
+    'similarly',
+    'in fact',
+    'as a result',
+    'consequently',
+    'in the same way',
+    'for example',
+    'for instance',
+    'however',
+    'thus',
+    'therefore',
+    'otherwise'
+    ])
+
+TIME = set([
+    'after',
+    'afterward',
+    'before',
+    'then',
+    'once',
+    'next',
+    'last',
+    'at last',
+    'at length',
+    'first',
+    'second',
+    'at first',
+    'formerly',
+    'rarely',
+    'usually',
+    'another',
+    'finally',
+    'soon',
+    'meanwhile',
+    'at the same time',
+    'for a minute',
+    'hour',
+    'day',
+    'during the morning',
+    'day',
+    'week',
+    'most important',
+    'later',
+    'ordinarily',
+    'to begin with',
+    'afterwards',
+    'generally',
+    'in order to',
+    'subsequently',
+    'previously',
+    'in the meantime',
+    'immediately',
+    'eventually',
+    'concurrently',
+    'simultaneously',
+    'occasionally'
+    ])
+
+SPACE = set([
+    'at the left',
+    'at the right',
+    'in the center',
+    'on the side',
+    'along the edge',
+    'on top',
+    'below',
+    'beneath',
+    'under',
+    'around',
+    'above',
+    'over',
+    'straight ahead',
+    'at the top',
+    'at the bottom',
+    'surrounding',
+    'opposite',
+    'at the rear',
+    'at the front',
+    'in front of',
+    'beside',
+    'behind',
+    'next to',
+    'nearby',
+    'in the distance',
+    'beyond',
+    'in the forefront',
+    'in the foreground',
+    'within sight',
+    'out of sight',
+    'across',
+    'under',
+    'nearer',
+    'adjacent',
+    'in the background'
+    ])
+
+CONCESSION = set([
+    'although',
+    'at any rate',
+    'at least',
+    'still',
+    'thought',
+    'even though',
+    'granted that',
+    'while it may be true',
+    'in spite of',
+    'of course'
+    ])
+
+COMPARISON = set([
+    'similarly',
+    'likewise',
+    'in like fashion',
+    'in like manner',
+    'analogous to'
+    ])
+
+EMPHASIS = set([
+    'above all',
+    'indeed',
+    'truly',
+    'of course',
+    'certainly',
+    'surely',
+    'in fact',
+    'really',
+    'in truth',
+    'again',
+    'besides',
+    'also',
+    'furthermore',
+    'in addition'
+    ])
+
+DETAILS = set([
+    'specifically',
+    'especially',
+    'in particular',
+    'to explain',
+    'to list',
+    'to enumerate',
+    'in detail',
+    'namely',
+    'including'
+    ])
+
+EXAMPLES = set([
+    'for example',
+    'for instance',
+    'to illustrate',
+    'thus',
+    'in other words',
+    'as an illustration',
+    'in particular'
+    ])
+    
+
+CONSEQUENCE = set([
+    'so that',
+    'with the result that',
+    'thus',
+    'consequently',
+    'hence',
+    'accordingly',
+    'for this reason',
+    'therefore',
+    'so',
+    'because',
+    'since',
+    'due to',
+    'as a result',
+    'in other words',
+    'then'
+    ])
+
+SUMMARY = set([
+    'therefore',
+    'finally',
+    'consequently',
+    'thus',
+    'in short',
+    'in conclusion',
+    'in brief',
+    'as a result',
+    'accordingly'
+    ])
+
+SUGGESTION = set([
+    'for this purpose',
+    'to this end',
+    'with this in mind',
+    'with this purpose in mind',
+    'therefore'
+    ])

@@ -2,6 +2,7 @@ import random
 import unittest
 
 from review_features import *
+from util import anew_scoring
 
 test_review = {}
 # review with 6 typos.
@@ -31,41 +32,55 @@ class FeaturesTests(unittest.TestCase):
 
     def test_fill_review_typos(self):
         fill_review_typos(test_review)
-        assert test_review['typos'] == 6
+        assert test_review['feature_typos'] == 6
 
     def test_fill_price_range(self):
         # numbers from the data
-        price_categories = [(28830,0),(43,1),(2,2),(1,3)]
-        for pid,cat in price_categories:
+        price_categories = [(28830, 0.2), (43, 0.5), (2, 0.9), (1, 1.0)]
+        for pid, cat in price_categories:
             review = {'product_id':pid}
-            fill_review_price_range(review)
-            assert review['price_range'] == cat
+            fill_price_range(review)
+            assert review['feature_price_range'] == cat
 
     def test_fill_num_urls(self):
         fill_num_urls(test_review)
         assert test_review['num_urls'] == 1
         
     def test_fill_all_caps(self):
+        fill_word_count(test_review)
         fill_all_caps_words(test_review)
-        assert test_review['all_caps'] == 4
+        assert test_review['feature_all_caps'] == 4.0/test_review['word_count']
 
     def test_word_count(self):
         fill_word_count(test_review)
         assert test_review['word_count'] == 44
 
     def test_fill_capitalization_errors(self):
+        fill_word_count(test_review)
         fill_capitalization_errors(test_review)
-        assert test_review['caps_err'] == 2
+        assert test_review['feature_caps_err'] == 2.0/test_review['word_count']
+    
+    def test_anew_scoring(self):
+        fill_valence_score(test_review)
+        fill_arousal_score(test_review)
+        fill_dominance_score(test_review)
+        # The test review contains only one valence word
+        print test_review['feature_valence_score']
+        print test_review['feature_arousal_score']
+        print test_review['feature_dominance_score']
+        assert test_review['feature_valence_score'] > 0.8
+        assert test_review['feature_arousal_score'] > 0.87
+        assert test_review['feature_dominance_score'] > 0.96
 
 class LoaderTests(unittest.TestCase):
 
     def test_load_products(self):
         '''Assumes amazon data for now'''
-        load_products()
+        load_az_products()
         assert AZ_PRODUCTS
         for key in AZ_PRODUCTS.iterkeys():
             assert type(key) == int
-            assert type(AZ_PRODUCTS[key]['amazonprice'])==float 
+            assert type(AZ_PRODUCTS[key]['amazonprice']) == float 
 
 if __name__ == '__main__':
     unittest.main()
