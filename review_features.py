@@ -77,9 +77,7 @@ def fill_review_typos(review):
         
 def fill_price_range(review):
     """Assign a price range between 0 (cheap) and 1 (expensive)."""
-    load_az_products()
-    load_yelp_bizes()
-    
+
     def fill_amazon_price(review):
         price_scores = ((30, 0.2), (80, 0.5), (200, 0.9))
         amazonprice = int(AZ_PRODUCTS[review['product_id']]['amazonprice'])
@@ -91,7 +89,10 @@ def fill_price_range(review):
             review['feature_price_range'] = 1.0
     
     def fill_yelp_price(review):
-        yelpprice = int(YELP_BUSINESSES[review['biz_id']]['price'])
+        try:
+            yelpprice = int(YELP_BIZ_INFO[review['biz_id']]['price'])
+        except Exception:
+            yelpprice = 0
         review['feature_price_range'] = float(yelpprice) / 4
 
     if 'product_id' in review:
@@ -123,7 +124,7 @@ def fill_ave_length_of_words(review):
         length = len(word)
         if length > 1:
             total_length += length
-    review['mean_word_length'] = float(total_length)/review['word_count']
+    review['mean_word_length'] = float(total_length)/(review['word_count'] or 1)
             
 def fill_amazon_frac_voted_useful(review):
     amazon_useful = float(review.get('useful') or 0.0)
@@ -139,7 +140,7 @@ def fill_all_caps_words(review):
     for word in words:
         if word.isupper() and len(word) > 1:
             num_all_caps += 1
-    review['feature_all_caps'] = float(num_all_caps)/review['word_count']
+    review['feature_all_caps'] = float(num_all_caps)/(review['word_count'] or 1)
 
 def fill_capitalization_errors(review):
     """Fill Capitalization Errors"""
@@ -151,7 +152,7 @@ def fill_capitalization_errors(review):
     for sentence in sentences:
         if not sentence[0].istitle():
             num_caps_err += 1
-    review['feature_caps_err'] = float(num_caps_err)/review['word_count']
+    review['feature_caps_err'] = float(num_caps_err)/(review['word_count'] or 1)
 
 def fill_num_urls(review):
     """Fill number of URLs in the review text"""
@@ -206,3 +207,5 @@ def fill_all_review_features(review):
     fill_summary_word_freq(review)
     fill_suggestion_word_freq(review)
     fill_price_range(review)
+    fill_ave_length_of_words(review)
+
