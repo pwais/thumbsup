@@ -1,1 +1,1 @@
-\beamer@endinputifotherversion {3.01pt}
+\beamer@endinputifotherversion {3.07pt}
