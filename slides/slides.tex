@@ -8,7 +8,7 @@ Computer Science Department \\
 University of California, Los Angeles\\
 Los Angeles, California 90095\\
 \texttt{\{ertan,romero,pwais\}@cs.ucla.edu}}
-
+\date{November 29, 2010}
 \begin{document}
 \maketitle{}
 \tableofcontents{}
@@ -16,12 +16,51 @@ Los Angeles, California 90095\\
 \section{Intro}
 \label{sec:intro}
 
-\begin{frame}{first slide has a figure}
+\begin{frame}{Feature Distributions}
 \begin{figure}[h]
   \centering
-  \includegraphics[scale=.3]{features_distributions}
-  \caption{This is the figure from the report}
+  \includegraphics[scale=.4]{features_distributions}
+  \caption{The distributions of the features}
   \label{fig:dist}
 \end{figure}
+\end{frame}
+
+\begin{frame}{Cross-validation accuracy of the algorithms}
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{c | c}
+    Algorithm & Accuracy\\
+    \hline
+    SVM (RBF) & 70.13\%\\
+    SVM (Linear) & 75\% \\
+    Adaboost & 80\%\\
+    Naive Bayes & 68.5\%\\
+    Winnow & 56\%\\
+  \end{tabular}
+  \caption{The 10 fold cross-validation accuracy of the algorithms}
+  \label{tab:performance}
+\end{table}
+\end{frame}
+
+\begin{frame}{Complications}
+Why do different algorithms perform differently on this task?
+\begin{itemize}
+\item SVM
+\item Adaboost
+\item Naive Bayes 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Future Work}
+\begin{itemize}
+\item Domain adaptation experiments
+\begin{figure}[ht]
+\centering
+%\includegraphics{adaptation.png}
+\label{fig:adaptation}
+\end{figure}
+\item Connections with the theoretical bounds
+\end{itemize}
+
 \end{frame}
 \end{document}
