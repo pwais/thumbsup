@@ -35,6 +35,10 @@ def fill_all_mean_length_of_words(reviews):
 def fill_normalized_url_count(reviews):
     _fill_normalized(reviews, 'feature_normalized_url_count', 'num_urls')
 
+def _fill_percentile_geq_75th(reviews, key):
+    for review in reviews:
+        review['percentile_geq_75th'] = bool(review[key] >= 75)
+
 def fill_all_reviews_features(reviews):
     """Fill everything"""
     fill_useful_percentile(reviews)
