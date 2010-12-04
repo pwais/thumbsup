@@ -133,9 +133,9 @@ class MRNgramIDFUtility(MRJob):
         
         for cat, doc_count in cat_to_doc_count.iteritems():
             if doc_count > 0:
-                yield ngram, "%s: %s" % (cat, 
-                                         idf(self.cats_to_num_docs.get(cat, 0), 
-                                             doc_count))
+                yield ngram, (cat, 
+                              idf(self.cats_to_num_docs.get(cat, 0), 
+                                  doc_count))
 
 if __name__ == '__main__':
     MRNgramIDFUtility.run()
