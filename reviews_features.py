@@ -11,7 +11,8 @@ def _fill_percentile(reviews, fill_key, feature_key, default=0.0):
 def _fill_normalized(reviews, fill_key, feature_key):
     max_feat_val = float(max(review.get(feature_key, 0) for review in reviews))
     for review in reviews:
-        review[fill_key] = review[feature_key] / max_feat_val
+        if(max_feat_val > 0):
+            review[fill_key] = float(review[feature_key]) / max_feat_val
 
 def fill_useful_percentile(reviews):
     if 'useful' in reviews[0]:

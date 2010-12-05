@@ -1,7 +1,7 @@
 import csv
 import os
 import sys
-
+import win32com.client
 import simplejson
 
 from review_features import fill_all_review_features
@@ -17,7 +17,7 @@ def stream_reviews_from_json():
         yield review
 
 def exportable_key(key):
-    return key.startswith('feature') or key.startswith('label')
+    return key.startswith('feature') or key.startswith('label') or key == 'id'
 
 if __name__ == '__main__':
     source = sys.argv[1]
@@ -31,17 +31,18 @@ if __name__ == '__main__':
 
     header = True
     reviews = []
+    app = win32com.client.gencache.EnsureDispatch('Word.Application')
     for review in streamer():
         
         # Record non-feature keys
         if review_keys is None:
             review_keys = set(review.keys())
 
-        fill_all_review_features(review)
+        fill_all_review_features(review, app)
         reviews.append(review)
     
     print >>sys.stderr, "Read all reviews"
-    
+    app.Quit()    
     fill_all_reviews_features(reviews)
 
     for review in reviews:

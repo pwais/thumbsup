@@ -5,11 +5,14 @@ from review_features import *
 from util import anew_scoring
 
 test_review = {}
+test_review2 = {}
 # review with 6 typos.
 test_review['text'] = '''Brand new owner, brand new wine lis, brand
 new feeel. GO check it out at http://www.iloveboobs.com ! Have the cheeze appetizer. i forjet what
 it's callede. But it was AMAZING! give it a try and I promese you WILL
 be BACK. '''
+
+test_review2['text'] = '''I initially purchased the Navigon top of the line unit.  It was cool, but a little sluggish and the buttons did not work as well.  This device is much faster, more intuitive to use and has a great display.  I love it. I even take it with me on walks with my son - put the GPS on the stroller and it tracks my MPH, total time traveled, stopped etc...  It was definitely expensive, but I love it!'''
 
 class FeaturesTests(unittest.TestCase):
 
@@ -71,6 +74,9 @@ class FeaturesTests(unittest.TestCase):
         assert test_review['feature_valence_score'] > 0.8
         assert test_review['feature_arousal_score'] > 0.87
         assert test_review['feature_dominance_score'] > 0.96
+
+    def test_error_using_word(self):
+        fill_writing_errors_using_word(test_review2)
 
 class LoaderTests(unittest.TestCase):
 

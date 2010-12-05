@@ -1,6 +1,8 @@
 import math
 import re
 
+import win32com.client, os
+
 import constants
 from spellchecker import is_typo
 from util import anew_scoring
@@ -178,14 +180,29 @@ def fill_dominance_score(review):
                                                                  re.findall("\w+", review['text']), 
                                                                  'dominance_mean')
 
+def fill_writing_errors_using_word(review,app):
+    wdDoNotSaveChanges = 0
+    path = os.path.abspath('tmp/tmp'+review['id']+'.txt')
+    file = open(path, 'w')
+    #review['text'].decode('unicode')
+    #file.write(review['text'].encode('utf-8'))
+    file.write(review['text'])
+    file.close()
+    doc = app.Documents.Open(path)
+    review['feature_grammar_err']=doc.GrammaticalErrors.Count
+    review['feature_typos']=doc.SpellingErrors.Count
+    app.ActiveDocument.Close(SaveChanges=False)
+    #review['text'].decode('utf-8')
+
 # Fill everything
-def fill_all_review_features(review):
+def fill_all_review_features(review,app):
     """Fill all review features in `review`"""
     fill_word_count(review)
     fill_gre_word_freq(review)
     fill_sat_word_freq(review)
     fill_ave_words_per_sentence(review)
     #fill_review_typos(review)   TODO make this faster
+    fill_writing_errors_using_word(review,app)
     fill_amazon_frac_voted_useful(review)
     fill_all_caps_words(review)
     fill_capitalization_errors(review)
