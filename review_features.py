@@ -1,3 +1,4 @@
+import itertools
 import math
 import re
 
@@ -79,6 +80,9 @@ def fill_review_typos(review):
         
 def fill_price_range(review):
     """Assign a price range between 0 (cheap) and 1 (expensive)."""
+
+    if 'feature_price_range' in review:
+        return
 
     def fill_amazon_price(review):
         price_scores = ((30, 0.2), (80, 0.5), (200, 0.9))
@@ -226,3 +230,82 @@ def fill_all_review_features(review,app):
     fill_price_range(review)
     fill_ave_length_of_words(review)
 
+
+##
+## Sparse version of the above features
+##
+
+_WORD_SET = frozenset(itertools.chain(
+                      constants.GRE_WORDS, 
+                      constants.SAT_WORDS,
+                      anew_scoring.ANEW_HIGH_VALENCE_WORDS,
+                      anew_scoring.ANEW_LOW_VALENCE_WORDS))
+_NGRAM_SET = frozenset(itertools.chain(
+                       constants.ILLUSTRATION,
+                       constants.CONTRAST,
+                       constants.ADDITION,
+                       constants.TIME,
+                       constants.SPACE,
+                       constants.CONCESSION,
+                       constants.COMPARISON,
+                       constants.EMPHASIS,
+                       constants.DETAILS,
+                       constants.EXAMPLES,
+                       constants.CONSEQUENCE,
+                       constants.SUMMARY,
+                       constants.SUGGESTION))
+
+def fill_special_word_count_sparse(review):
+    
+    
+    if 'sparse_features' not in review:
+        review['sparse_features'] = {}
+
+    # Collect all word features
+    words = [wd.lower() for wd in re.findall("\w+", review['text'])]
+    for word in words:
+        if word in _WORD_SET:
+            review['sparse_features'].setdefault(word, 0)
+            review['sparse_features'][word] += 1
+    
+    # Collect all ngram features
+    MAX_NGRAM_LENGTH = 6
+    for start in xrange(len(words)):
+        for ngram_length in xrange(1, MAX_NGRAM_LENGTH + 1):
+            ngram = ' '.join(words[start:start+ngram_length])
+            if ngram in _NGRAM_SET and len(ngram) >= 4:
+                review['sparse_features'].setdefault(ngram, 0)
+                review['sparse_features'][ngram] += 1
+
+FILL_SENT_LENGTH_MAX_SENTENCES = 20
+def fill_sent_length_sparse(review):
+    if 'sparse_features' not in review:
+        review['sparse_features'] = {}
+    
+    sent_wd_counts = []
+    for sent in re.split("[.!?]+", review['text']):
+        sent_wd_counts.append(len(re.findall("\w+", sent)))
+    
+    for sent_num, wd_count in enumerate(sent_wd_counts[:FILL_SENT_LENGTH_MAX_SENTENCES]):
+        key = 'f_sent_%s_wd_count' % sent_num
+        review['sparse_features'][key] = wd_count
+
+def _fill_copy_feature_to_sparse(review, fill_method, key):
+    if 'sparse_features' not in review:
+        review['sparse_features'] = {}
+    
+    fill_method(review)
+    
+    sparse_key = 'f_%s' % key
+    review['sparse_features'][sparse_key] = review[key]
+
+def fill_all_sparse_features(review):
+    fill_word_count(review)
+    fill_special_word_count_sparse(review)
+    fill_sent_length_sparse(review)
+    
+    _fill_copy_feature_to_sparse(review, fill_num_urls, 'num_urls')
+    _fill_copy_feature_to_sparse(review, fill_capitalization_errors, 'feature_caps_err')
+    _fill_copy_feature_to_sparse(review, fill_all_caps_words, 'feature_all_caps')
+    _fill_copy_feature_to_sparse(review, fill_ave_length_of_words, 'mean_word_length')
+    _fill_copy_feature_to_sparse(review, fill_price_range, 'feature_price_range')

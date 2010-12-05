@@ -5,6 +5,16 @@ import simplejson
 
 import config
 
+# Map of wd -> ANEW data, e.g.
+#"dollar": {
+#    "valence_mean": 7.4699999999999998, 
+#    "arousal_mean": 6.0700000000000003, 
+#    "dominance_std": 2.4199999999999999, 
+#    "valence_std": 1.72, 
+#    "dominance_mean": 6.3300000000000001, 
+#    "arousal_std": 2.6699999999999999, 
+#    "word_freq": 46
+#  }, 
 ANEW_WORD_MAP = {}
 
 # Try to load ANEW data
@@ -20,6 +30,13 @@ for wd, key_to_score in ANEW_WORD_MAP.iteritems():
     for key, score in key_to_score.iteritems():
         ANEW_KEY_TO_MIN_MAX[key][0] = min(score, ANEW_KEY_TO_MIN_MAX[key][0])
         ANEW_KEY_TO_MIN_MAX[key][1] = max(score, ANEW_KEY_TO_MIN_MAX[key][1])
+
+ANEW_MIN_HIGH_VALENCE = 5.0
+ANEW_MAX_LOW_VALENCE = 3.0
+ANEW_HIGH_VALENCE_WORDS = frozenset(wd for wd, data in ANEW_WORD_MAP.iteritems()
+                                       if data['valence_mean'] >= ANEW_MIN_HIGH_VALENCE)
+ANEW_LOW_VALENCE_WORDS = frozenset(wd for wd, data in ANEW_WORD_MAP.iteritems()
+                                      if data['valence_mean'] <= ANEW_MAX_LOW_VALENCE)
 
 def weighted_freq_score(words, anew_key):
     """Computed weighted score.  See:
