@@ -29,7 +29,6 @@ if __name__ == '__main__':
     review_keys = None
     feature_keys = None
 
-    header = True
     reviews = []
     for review in streamer():
         
@@ -44,12 +43,7 @@ if __name__ == '__main__':
     
     fill_all_reviews_features(reviews)
 
+    print >>sys.stdout, ",".join(k for k in review.keys() if exportable_key(k))
     for review in reviews:
-        
-        # Print the CSV header exactly once
-        if header:
-            print >>sys.stdout, ",".join(k for k in review.keys() if exportable_key(k))
-            header = False
-
         print >>sys.stdout, ",".join(str(review[k]) for k in review.keys()
                                      if exportable_key(k))

@@ -129,7 +129,7 @@ class MRNgramIDFUtility(MRJob):
                 cat_to_doc_count[cat] += 1
             total_num_matching_docs += 1
         
-        yield ngram, "overall: %s" % idf(self.total_num_docs, total_num_matching_docs)
+        yield ngram, ('overall', idf(self.total_num_docs, total_num_matching_docs))
         
         for cat, doc_count in cat_to_doc_count.iteritems():
             if doc_count > 0:

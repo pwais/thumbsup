@@ -36,7 +36,7 @@ ANEW_MAX_LOW_VALENCE = 3.0
 ANEW_HIGH_VALENCE_WORDS = frozenset(wd for wd, data in ANEW_WORD_MAP.iteritems()
                                        if data['valence_mean'] >= ANEW_MIN_HIGH_VALENCE)
 ANEW_LOW_VALENCE_WORDS = frozenset(wd for wd, data in ANEW_WORD_MAP.iteritems()
-                                      if data['valence_mean'] <= ANEW_MAX_LOW_VALENCE) 
+                                      if data['valence_mean'] <= ANEW_MAX_LOW_VALENCE)
 
 def weighted_freq_score(words, anew_key):
     """Computed weighted score.  See:

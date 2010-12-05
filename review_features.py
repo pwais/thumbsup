@@ -1,3 +1,4 @@
+import itertools
 import math
 import re
 
@@ -217,24 +218,28 @@ def fill_all_review_features(review):
 ## Sparse version of the above features
 ##
 
+_WORD_SET = frozenset(itertools.chain(
+                      constants.GRE_WORDS, 
+                      constants.SAT_WORDS,
+                      anew_scoring.ANEW_HIGH_VALENCE_WORDS,
+                      anew_scoring.ANEW_LOW_VALENCE_WORDS))
+_NGRAM_SET = frozenset(itertools.chain(
+                       constants.ILLUSTRATION,
+                       constants.CONTRAST,
+                       constants.ADDITION,
+                       constants.TIME,
+                       constants.SPACE,
+                       constants.CONCESSION,
+                       constants.COMPARISON,
+                       constants.EMPHASIS,
+                       constants.DETAILS,
+                       constants.EXAMPLES,
+                       constants.CONSEQUENCE,
+                       constants.SUMMARY,
+                       constants.SUGGESTION))
+
 def fill_special_word_count_sparse(review):
-    word_set = frozenset((constants.GRE_WORDS, 
-                          constants.SAT_WORDS,
-                          anew_scoring.ANEW_HIGH_VALENCE_WORDS,
-                          anew_scoring.ANEW_LOW_VALENCE_WORDS))
-    ngram_set = frozenset((constants.ILLUSTRATION,
-                           constants.CONTRAST,
-                           constants.ADDITION,
-                           constants.TIME,
-                           constants.SPACE,
-                           constants.CONCESSION,
-                           constants.COMPARISON,
-                           constants.EMPHASIS,
-                           constants.DETAILS,
-                           constants.EXAMPLES,
-                           constants.CONSEQUENCE,
-                           constants.SUMMARY,
-                           constants.SUGGESTION))
+    
     
     if 'sparse_features' not in review:
         review['sparse_features'] = {}
@@ -242,8 +247,8 @@ def fill_special_word_count_sparse(review):
     # Collect all word features
     words = [wd.lower() for wd in re.findall("\w+", review['text'])]
     for word in words:
-        if word in word_set:
-            review['sparse_features'].set_default(word, 0)
+        if word in _WORD_SET:
+            review['sparse_features'].setdefault(word, 0)
             review['sparse_features'][word] += 1
     
     # Collect all ngram features
@@ -251,25 +256,24 @@ def fill_special_word_count_sparse(review):
     for start in xrange(len(words)):
         for ngram_length in xrange(1, MAX_NGRAM_LENGTH + 1):
             ngram = ' '.join(words[start:start+ngram_length])
-            if ngram in ngram_set:
-                review['sparse_features'].set_default(ngram, 0)
+            if ngram in _NGRAM_SET and len(ngram) >= 4:
+                review['sparse_features'].setdefault(ngram, 0)
                 review['sparse_features'][ngram] += 1
 
+FILL_SENT_LENGTH_MAX_SENTENCES = 20
 def fill_sent_length_sparse(review):
     if 'sparse_features' not in review:
         review['sparse_features'] = {}
-    
-    MAX_SENTENCES = 20
     
     sent_wd_counts = []
     for sent in re.split("[.!?]+", review['text']):
         sent_wd_counts.append(len(re.findall("\w+", sent)))
     
-    for sent_num, wd_count in enumerate(sent_wd_counts[:MAX_SENTENCES]):
+    for sent_num, wd_count in enumerate(sent_wd_counts[:FILL_SENT_LENGTH_MAX_SENTENCES]):
         key = 'f_sent_%s_wd_count' % sent_num
         review['sparse_features'][key] = wd_count
 
-def fill_copy_feature_to_sparse(review, fill_method, key):
+def _fill_copy_feature_to_sparse(review, fill_method, key):
     if 'sparse_features' not in review:
         review['sparse_features'] = {}
     
@@ -279,12 +283,12 @@ def fill_copy_feature_to_sparse(review, fill_method, key):
     review['sparse_features'][sparse_key] = review[key]
 
 def fill_all_sparse_features(review):
+    fill_word_count(review)
     fill_special_word_count_sparse(review)
     fill_sent_length_sparse(review)
     
-    fill_copy_feature_to_sparse(review, fill_num_urls, 'num_urls')
-    fill_copy_feature_to_sparse(review, fill_capitalization_errors, 'feature_caps_err')
-    fill_copy_feature_to_sparse(review, fill_all_caps_words, 'feature_all_caps')
-    fill_copy_feature_to_sparse(review, fill_ave_length_of_words, 'mean_word_length')
-    fill_copy_feature_to_sparse(review, fill_price_range, 'feature_price_range')
-    fill_copy_feature_to_sparse(review, fill_price_range, 'feature_price_range')
+    _fill_copy_feature_to_sparse(review, fill_num_urls, 'num_urls')
+    _fill_copy_feature_to_sparse(review, fill_capitalization_errors, 'feature_caps_err')
+    _fill_copy_feature_to_sparse(review, fill_all_caps_words, 'feature_all_caps')
+    _fill_copy_feature_to_sparse(review, fill_ave_length_of_words, 'mean_word_length')
+    _fill_copy_feature_to_sparse(review, fill_price_range, 'feature_price_range')

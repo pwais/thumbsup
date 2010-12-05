@@ -15,7 +15,7 @@ if __name__ == '__main__':
     for line in csv.DictReader(sys.stdin):
         feature_rows.append(line)
    
-	feature_keys = [k for k in feature_rows[0].keys() 
+    feature_keys = [k for k in feature_rows[0].keys() 
                       if (k.startswith('feature_') and
                           # TODO: make typos feature run faster 
                           k != 'feature_typos')]
