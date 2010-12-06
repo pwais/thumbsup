@@ -1,6 +1,8 @@
 """Given a stream of reviews on stdin, write sparse review features to stdout
  
+Example:
 python reviews_to_features_sparse.py json l1 yelp label_useful_extreme_percentile < external/yelp/review_dump_11-4-2010.json > experiment_data/yelp_sparse_features.csv 
+head -n 15000 external/amazon/reviewsTableCSV.csv | python reviews_to_features_sparse.py csv l1 amazon label_useful_extreme_percentile > experiment_data/amazon_features_sparse.csv
 """
 import csv
 import itertools
@@ -77,7 +79,7 @@ if __name__ == '__main__':
 
     all_sparse_feature_keys = list(all_sparse_feature_keys)
     print >>sys.stdout, ",".join(all_sparse_feature_keys + [label_key])
-    for review in reviews:
+    for rev_idx, review in enumerate(reviews):
         if review[label_key] is None:
             continue
 
@@ -87,5 +89,5 @@ if __name__ == '__main__':
                                          for k in all_sparse_feature_keys),
                                         iter([str(review[label_key])])))
 
-
+        print >>sys.stderr, "Finished review %s" % rev_idx
 

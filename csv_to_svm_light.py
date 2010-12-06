@@ -9,6 +9,7 @@ if __name__ == '__main__':
             feature_keys = [k for k in row.keys() if not k.startswith('label')]
             label_key = list(set(row.keys()) - set(feature_keys))[0]
             idx_to_feature_key = dict(enumerate(feature_keys))
+            print >>sys.stderr, "Found %s feature keys" % len(idx_to_feature_key)
         
         label = '1' if eval(row[label_key]) else '-1'
         feature_text = ' '.join("%s:%s" % (key_idx + 1, row[feature_key])
