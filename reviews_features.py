@@ -11,6 +11,11 @@ def _fill_percentile(reviews, fill_key, feature_key, default=0.0):
     for review in reviews:
         idx = bisect.bisect_left(sorted_values, review.get(feature_key, default))
         review[fill_key] = 100.0 * (idx + 1) / len(sorted_values)
+    
+    import sys
+    pts = [0, 25, 50, 75, 100]
+    for p in pts:
+        print >>sys.stderr, "percentiles: %s" % (sorted_values[(p/100.0) * len(sorted_values) - 1])
 
 def _fill_normalized(reviews, fill_key, feature_key):
     max_feat_val = float(max(review.get(feature_key, 0) for review in reviews))

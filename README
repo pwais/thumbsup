@@ -4,7 +4,7 @@ python reviews_to_features.py json yelp < external/yelp/review_dump_11-4-2010.js
 head -n 15000 external/amazon/reviewsTableCSV.csv | python reviews_to_features.py csv amazon > experiment_data/amazon_features_dense_final.csv
 
 To generate sparse features:
-python reviews_to_features_sparse.py json l1 yelp < external/yelp/review_dump_11-4-2010.json > experiment_data/yelp_features_sparse_final.csv
-head -n 15000 external/amazon/reviewsTableCSV.csv | python reviews_to_features_sparse.py csv l1 amazon > experiment_data/amazon_features_sparse_final.csv
+python reviews_to_features_sparse.py json l1 yelp label_useful_extreme_percentile < external/yelp/review_dump_11-4-2010.json > experiment_data/yelp_features_sparse_final.csv
+head -n 15000 external/amazon/reviewsTableCSV.csv | python reviews_to_features_sparse.py csv l1 amazon label_useful_extreme_percentile > experiment_data/amazon_features_sparse_final.csv
 
 

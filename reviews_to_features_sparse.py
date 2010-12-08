@@ -44,10 +44,10 @@ if __name__ == '__main__':
     
     source = sys.argv[3]
     if source == 'amazon':
-        fill_idf_feature = idf.fill_amazon_idf_feature
+        fill_idf_feature = idf.fill_amazon_idf_feature_sparse
         fill_typos_feature = typos.fill_amazon_typo_feature
     elif source == 'yelp':
-        fill_idf_feature = idf.fill_yelp_idf_feature
+        fill_idf_feature = idf.fill_yelp_idf_feature_sparse
         fill_typos_feature = typos.fill_yelp_typo_feature
     
     label_key = sys.argv[4]
