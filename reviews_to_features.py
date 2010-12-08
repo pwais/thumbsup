@@ -74,4 +74,4 @@ if __name__ == '__main__':
             print >>sys.stdout, ",".join(
                                       itertools.chain((str(review[k]) for k in review.keys()
                                                        if exportable_key(k)),
-                                                      iter([review['label_useful_extreme_percentile']])))
+                                                      iter([str(review['label_useful_extreme_percentile'])])))
