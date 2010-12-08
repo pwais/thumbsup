@@ -28,7 +28,7 @@ if __name__ == '__main__':
         output_file_name = "%s_%s" % (output_file, classifier_name)
         txt_out_name = "%s_%s_stdout" % (output_file, classifier_name)
         
-        cmd_txt = cmd_txt % (input_file, output_file)
+        cmd_txt = cmd_txt % (input_file, output_file_name)
         
         full_cmd = "%s %s" % (JAVA_CMD, cmd_txt)
         
