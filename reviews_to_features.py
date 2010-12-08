@@ -68,5 +68,6 @@ if __name__ == '__main__':
 
     print >>sys.stdout, ",".join(k for k in review.keys() if exportable_key(k))
     for review in reviews:
-        print >>sys.stdout, ",".join(str(review[k]) for k in review.keys()
-                                     if exportable_key(k))
+        if review.get('label_useful_extreme_percentile') is not None:
+            print >>sys.stdout, ",".join(str(review[k]) for k in review.keys()
+                                         if exportable_key(k))
