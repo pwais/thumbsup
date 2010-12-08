@@ -58,11 +58,12 @@ def _fill_percentile_geq_75th(reviews, key):
 def fill_all_reviews_features(reviews):
     """Fill everything"""
     fill_useful_percentile(reviews)
+    fill_useful_extreme_percentile(reviews)
     fill_normalized_word_count(reviews)
     fill_all_mean_words_per_sentence(reviews)
     fill_all_mean_length_of_words(reviews)
     fill_normalized_url_count(reviews)
-    fill_useful_above_median(reviews)
+#    fill_useful_above_median(reviews)
 
 ##
 ## Sparse features

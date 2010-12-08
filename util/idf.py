@@ -21,7 +21,7 @@ MAX_NGRAM_LENGTH = 5
 
 MAX_NUM_IDF_FEATS = 10
 
-def __fill_idf_feature_sparse(review, idf_map, max_idf, category='overall'):
+def get_top_ngram_idfs(review, idf_map, max_idf, category='overall'):
     words = [wd.lower() for wd in re.findall("\w+", review['text'])]
     ngram_to_idf = {}
     for start in xrange(len(words)):
@@ -32,14 +32,27 @@ def __fill_idf_feature_sparse(review, idf_map, max_idf, category='overall'):
     
     # Grab the top ten idf-scoring ngrams
     top_ngram_idf = sorted(ngram_to_idf.iteritems(), key=lambda e: -1*e[1])[:MAX_NUM_IDF_FEATS]
-    
+    return top_ngram_idf
+
+def __fill_idf_feature_sparse(review, idf_map, max_idf, category='overall'):
+    top_ngram_idf = get_top_ngram_idfs(review, idf_map, max_idf, category=category)
     for ngram, idf in top_ngram_idf:
         review['sparse_features']['f_idf_%s' % ngram] = idf
-    
 
-def fill_amazon_idf_feature(review):
+def __fill_idf_feature_dense(review, idf_map, max_idf, category='overall', key='feature_idf'):
+    top_ngram_idf = get_top_ngram_idfs(review, idf_map, max_idf, category=category)
+    review[key] = sum(idf for ngram, idf in top_ngram_idf)
+
+def fill_amazon_idf_feature_sparse(review):
     __fill_idf_feature_sparse(review, AMAZON_IDF_MAP, AMAZON_MAX_IDF)
 
-def fill_yelp_idf_feature(review):
+def fill_yelp_idf_feature_sparse(review):
     __fill_idf_feature_sparse(review, YELP_IDF_MAP, YELP_MAX_IDF)
+
+def fill_amazon_idf_feature(review):
+    __fill_idf_feature_dense(review, AMAZON_IDF_MAP, AMAZON_MAX_IDF)
+
+def fill_yelp_idf_feature(review):
+    __fill_idf_feature_dense(review, YELP_IDF_MAP, YELP_MAX_IDF)
+
 
