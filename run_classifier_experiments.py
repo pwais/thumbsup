@@ -1,5 +1,7 @@
 """Script to run all classifier experiments (using weka) for a single CSV data file"""
+from __future__ import with_statement
 
+import os
 import subprocess
 import sys
 
@@ -7,11 +9,11 @@ JAVA_CMD = "java -cp external/weka/weka.jar:external/weka/libsvm.jar"
 
 WEKA_CLASSIFIER_CMDS = {
     'adaboost': 
-        "weka.classifiers.meta.AdaBoostM1 -D -x 5 -i -k -classifications weka.classifiers.evaluation.output.prediction.PlainText -t %s -d %s",
+        "weka.classifiers.meta.AdaBoostM1 -D -x 5 -i -k -t %s -d %s",
     'svm_linear': 
         "weka.classifiers.functions.LibSVM -D -x 5 -i -k -K 0 -t %s -d %s",
     'svm_poly': 
-        "weka.classifiers.functions.LibSVM -D -x 5 -i -k -K 1 -D 4 -t %s -d %s",
+        "weka.classifiers.functions.LibSVM -D -x 5 -i -k -K 1 -t %s -d %s",
     'svm_rbf': 
         "weka.classifiers.functions.LibSVM -D -x 5 -i -k -K 3 -t %s -d %s",
     'naive_bayes': 
@@ -19,7 +21,6 @@ WEKA_CLASSIFIER_CMDS = {
 }
 
 if __name__ == '__main__':
-    
     input_file = sys.argv[1]
     output_file = sys.argv[2]
     
@@ -31,6 +32,7 @@ if __name__ == '__main__':
         
         full_cmd = "%s %s" % (JAVA_CMD, cmd_txt)
         
-        print "Running: %s" % full_cmd
-        if not subprocess.check_call(full_cmd.split(' ')):
-            break
+        print "Running: %s saving stdout to %s" % (full_cmd, txt_out_name)
+        
+        with open(txt_out_name, 'w') as stdoutf:
+            subprocess.check_call(full_cmd.split(' '), stdout=stdoutf)
