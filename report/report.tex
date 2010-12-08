@@ -40,6 +40,56 @@ We tell a story to motivate the problem. We mention Jenn's
 work~\cite{JennLearnDiffDomains} and the sentiment classification
 work~\cite{PangSentimentClassification}.
 
+\section{Feature Extraction and Labelling the Data}
+We have divided the features into several categories.
+\subsection{Features}
+\subsubsection{Word Frequencies and Counts}
+Our simplest feature is the number of words in the review. Similarly,
+we calculate the average number of words per sentence and
+total number of sentences in the review. Furthermore, we count the
+number of URLs.
+
+We obtain many different sets of words divided with respect to their
+contextual meanings i.e. time, space, comparison, contrast, summary,
+suggestion, emphasis, etc. and we count the number of occurences of
+these in a review. For instance, comparison words are
+\emph{similarly, likewise,} etc., contrast words are \emph{but,
+  however, nevertheless, in spite of,} etc. Moreover, we have some
+other sets of special words such as SAT, GRE lists on which we apply the same procedure.  We normalize by dividing each of them by the total
+number of words in the body of the review and use them as features.   
+
+\subsubsection{Sentential Errors}
+We count the grammar and spelling errors with libraries using
+Microsoft Word. In addition to those, we get the number of
+capitalization mistakes and words with all capital letters. Similarly, we
+divide those count by the total number of words in the review to have
+a better sense of measurement.  
+
+\subsubsection{Scores}
+
+\subsubsection{Product/Service Related Features} 
+This feature is somewhat different than the previous ones
+because it depends on the product as opposed to a particular
+review. We include the price of the product from the Amazon data set and
+discretize it so that we have a corresponding measurement of price
+range as we have in Yelp reviews (an integer between 1-4). 
+
+\subsection{Deciding on the Labelling}
+In the early experiments, we used$50^{th}$ percentile cutoff to label the
+review as useful. In other words, if the positive votes for a review is above
+$50^{th}$ percentile, we labeled it as useful. However, this approach affected our classification
+accuracy. Therefore, we pushed the thresholds to more extreme values
+to get rid of the noisy data in the middle. Currently, we label a review as useful
+if its positive votes are in the $75^{th}$ percentile or above and not
+useful if they are 
+in the $5^{th}$ percentile or below. We observe the reflection of this
+approach on the confusion matrices. We will discuss more about this in
+Section \ref{sec:single_domain}.
+
+
+\section{Single Domain Experiments}
+\label{sec:single_domain}  
+
 \section{Domain Adaptation}
 \label{sec:background}
 
