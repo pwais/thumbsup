@@ -67,7 +67,8 @@ if __name__ == '__main__':
             num_neg += 1
     print >>sys.stderr, "Got %s positive examples and %s negative examples" % (num_pos, num_neg)
 
-    print >>sys.stdout, ",".join(k for k in review.keys() if exportable_key(k))
+    print >>sys.stdout, ",".join([k for k in review.keys() if exportable_key(k)] + 
+                                 ['label_useful_extreme_percentile'])
     for review in reviews:
         if review.get('label_useful_extreme_percentile') is not None:
             # Weka uses the last feature as the label by convention
