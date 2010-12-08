@@ -1,4 +1,5 @@
 import csv
+import itertools
 import os
 import sys
 
@@ -19,7 +20,7 @@ def stream_reviews_from_json():
         yield review
 
 def exportable_key(key):
-    return key.startswith('feature') or key.startswith('label')
+    return key.startswith('feature')
 
 if __name__ == '__main__':
     source = sys.argv[1]
@@ -69,5 +70,8 @@ if __name__ == '__main__':
     print >>sys.stdout, ",".join(k for k in review.keys() if exportable_key(k))
     for review in reviews:
         if review.get('label_useful_extreme_percentile') is not None:
-            print >>sys.stdout, ",".join(str(review[k]) for k in review.keys()
-                                         if exportable_key(k))
+            # Weka uses the last feature as the label by convention
+            print >>sys.stdout, ",".join(
+                                      itertools.chain((str(review[k]) for k in review.keys()
+                                                       if exportable_key(k)),
+                                                      iter([review['label_useful_extreme_percentile']])))
