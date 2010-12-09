@@ -2,6 +2,7 @@
 from optparse import OptionParser
 import random
 import sys
+import csv
 
 def sample_category(data, category, N):
     '''extract a sample of N reviews from category'''
@@ -13,21 +14,36 @@ def relabel_dataset(dataset, label):
         # relabel
         pass
 
-def combine_domains(source, target, ms, mt):
+def output_weight_file(alpha, ms, mt):
+    '''produce a file with ms copies of (1-alpha) and mt copies of
+    alpha. One weight per line. The output file is
+    msS+mtT-alpha.wgt'''
+    outfile = open("%sS+%sT-%s.wgt" % (ms, mt, alpha), 'w')
+    source_weight = '%s\n' % (1-alpha)
+    print >>outfile, source_weight*ms, # ',' to avoid extra newline
+    target_weight = '%s\n' % alpha
+    print >>outfile, target_weight*mt
+    outfile.close()
+
+def combine_domains(S, T, ms, mt):
     '''Produces a set with reviews from both domains with ms source
     reviews and mt target reviews.'''
-    S = [r.strip() for r in open(source).xreadlines()]
-    T = [r.strip() for r in open(target).xreadlines()]
-    mS = random.sample(S, ms)
-    mT = random.sample(T, mt)
+    mS = random.sample(open(S).readlines()[1:], ms)
+    mT = random.sample(open(T).readlines()[1:], mt)
 
     return mS + mT
 
 if __name__ == '__main__':
     parser = OptionParser()
-    parser.add_option('--combine', nargs=4,
+    parser.add_option('--combine', nargs=2,
                       help='Combine source and target into one data set.' \
-                          ' Arguments: sourcefile target ms mt')
+                          ' Arguments: sourcefile targetfile.' \
+                          ' Options -s and -t are required with this.' \
+                          ' Output saved to msS+mtT.csv')
+    parser.add_option('-s', 
+                      help='Number of examples from the source domain')
+    parser.add_option('-t',
+                      help='Number of examples from the target domain')
     relabel_help='''Force all the examples to have the same
                label. Arguments: file newlabel. Useful to create input
                data for the linear classifier that learns the domain
@@ -35,12 +51,33 @@ if __name__ == '__main__':
                as an estimate of the distance between the
                distributions of the domains.'''
     parser.add_option('--relabel', nargs=2, help=relabel_help)
+    alpha_help='''Expecify alpha to be used for the alpha-error. If
+    this is epecified a .wgt file will be generated to pass to libsvm
+    during training. Output saved in msS+mtT-alpha.wgt'''
+    parser.add_option('-a', '--alpha', help=alpha_help)
     
     options, args = parser.parse_args()
     if options.combine:
-        s,t,ms,mt = options.combine
-        for x in combine_domains(s, t, int(ms), int(mt)):
-            print x
+        s,t = options.combine
+        if not options.s or not options.t:
+            print 'ms and mt are required when combining domains. See -h'
+            sys.exit(1)
+        ms, mt = int(options.s), int(options.t)
+        outfile = open('%sS+%sT.csv' % (ms, mt), 'w')
+        # print header first. don't use csv dict reader to make it
+        # simpler
+        header = open(s).readlines()[0].strip()
+        print >>outfile, header
+        for x in combine_domains(s, t, ms, mt):
+            print >>outfile, x.strip()
     elif options.relabel:
         file, newlabel = options.relabel
         relabel_dataset(file, newlabel)
+
+    if options.alpha:
+        if not options.s or not options.t:
+            print 'ms and mt are required when generating a wieght file. See -h'
+            sys.exit(1)
+        ms, mt = int(options.s), int(options.t),
+        output_weight_file(float(options.alpha), ms, mt)
+
