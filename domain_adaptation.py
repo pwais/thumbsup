@@ -16,26 +16,38 @@ matplotlib.use('TkAgg')      # backend
 import matplotlib.pyplot as pyplot
 import simplejson
 
-def plot_bound(zeta, fix):
-    '''plots the bound given zeta. Fix says which sample size is fixed
-    (S or T)'''
+def plot_err(ms, mt, zeta, jsonfile):
+    data = simplejson.loads(open(jsonfile).read())
+    X = [0.05*x for x in range(20)]
+    Y = []
+    beta = float(mt) / (ms + mt)
+    for alpha in X:
+        key = str((ms, mt, alpha))
+        acc = data[key]/100
+        err = 1 - acc
+        Y.append(acc)
+    pyplot.plot(X, Y)
+    
+def plot_bound(ms, mt, zeta):
     X = [0.1*x for x in range(11)]
+    Y = []
+    beta = float(mt) / (ms + mt)
+    for alpha in X:
+        Y.append(bound(alpha,beta, ms+mt, zeta))
+    pyplot.plot(X, Y)
+
+def plot_curve(curve, zeta, fix,):
+    '''plots the curve given zeta. Fix says which sample size is fixed
+    (S or T)'''
     S = [2500]
     T = [250, 500, 1000, 2000]
     if fix == 'T': S,T = T,S
     for ms in S:
         for mt in T:
-            # this is one curve
-            beta = float(mt) / (ms + mt)
-            Y = []
-            for alpha in X:
-                Y.append(bound(alpha,beta, ms+mt, zeta))
-                
-            print ms, mt
-            print 'x', X, len(X)
-            print 'Y', Y, len(Y)
-            pyplot.plot(X, Y)
-            
+            if curve == 'bound':
+                plot_bound(ms, mt, zeta)
+            else:               # assume jason file
+                plot_err(ms, mt, zeta, curve)
 
     pyplot.show()
 
@@ -190,9 +202,11 @@ if __name__ == '__main__':
         help="Automatically generate a bunch of combined files for "
              "default experiment parameters in the given directory (first argument) "
              "using the test file given as the second arg.")
-    parser.add_option('--plot', nargs=2, default=[1, 'S'],
-                      help='plots the bound given zeta and '
-                      'fixing either S or T. Arguments: zeta {S|T}')
+    parser.add_option('--plot', nargs=3,
+                      help='plots a curve given zeta and '
+                      'fixing either S or T. Arguments: curve zeta {S|T}.'
+                      ' curve can be either "bound" or a filename with '
+                      'json data to be plotted')
     
     options, args = parser.parse_args()
     if options.auto is not None and options.combine:
@@ -221,6 +235,6 @@ if __name__ == '__main__':
         ms, mt = int(options.s), int(options.t),
         output_weight_file(float(options.alpha), ms, mt)
     elif options.plot:
-        zeta, fixed = options.plot
-        plot_bound(float(zeta), fixed)
+        curve, zeta, fixed = options.plot
+        plot_curve(curve, float(zeta), fixed)
 
