@@ -30,7 +30,16 @@ Los Angeles, California 90095\\
 \begin{document}
 \maketitle
 \begin{abstract}
-  We have an awesome translator that works for amazon and yelp reviews.
+In this project, we study the learning task of predicting ``usefulness''
+votes of product and business reviews.  We have obtained 2 million
+Amazon reviews and 15,000 Yelp reviews annotated with voting
+information.  We wish to predict whether a review will achieve a high
+ranking on the scoreboard of reviews voted ``useful''.  In particular,
+we consider a binary labeling task where we assign a positive
+``usefulness'' label to a review if its positive vote count falls at or
+above the pth percentile of all vote counts (and assign a negative
+label otherwise).  To predict these labels, we have implemented about
+two dozen textual and contextual features inspired by Pang et al. \cite{PangSentimentClassification}
 \end{abstract}
 
 \section{Introduction}
@@ -76,7 +85,7 @@ discretize it so that we have a corresponding measurement of price
 range as we have in Yelp reviews (an integer between 1-4). 
 
 \subsection{Deciding on the Labelling}
-In the early experiments, we used$50^{th}$ percentile cutoff to label the
+In the early experiments, we used $50^{th}$ percentile cutoff to label the
 review as useful. In other words, if the positive votes for a review is above
 $50^{th}$ percentile, we labeled it as useful. However, this approach affected our classification
 accuracy. Therefore, we pushed the thresholds to more extreme values
@@ -154,6 +163,13 @@ when we use sparse encoding and as you can see from Tables
 the Naive Bayes classifier increases from $70.719\%$ to $76.8091$ for
 Amazon data set and from $66.9037\%$ to $77.1733$ for Yelp data set.  
 
+Looking at the accuracies of Adaboost algorithm and linear SVM in
+dense and sparse configurations, we observe similar accuracies for
+both Amazon and Yelp data set. One of the main
+reasons is the class distribution (the choice of percentile to
+label the sample as useful) has a significant
+effect on the accuracy. This conclusion originates from the
+observation of ``bad'' confusion matrices for the classifiers. 
 
 
 \section{Domain Adaptation}
