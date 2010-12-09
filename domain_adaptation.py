@@ -1,6 +1,10 @@
 '''Functions to prepare the domain adaptation experiments'''
+from __future__ import with_statement
+
 from optparse import OptionParser
+import os
 import random
+import subprocess
 import sys
 import csv
 
@@ -31,11 +35,13 @@ def relabel_and_combine(domain0, domain1):
         r[label] = 1
         writer.writerow(r)
 
-def output_weight_file(alpha, ms, mt):
+def output_weight_file(alpha, ms, mt, fpath=None):
     '''produce a file with ms copies of (1-alpha) and mt copies of
     alpha. One weight per line. The output file is
     msS+mtT-alpha.wgt'''
-    outfile = open("%sS+%sT-%s.wgt" % (ms, mt, alpha), 'w')
+    if fpath is None:
+        fpath = "%sS+%sT-%s.wgt" % (ms, mt, alpha)
+    outfile = open(fpath, 'w')
     source_weight = '%s\n' % (1-alpha)
     print >>outfile, source_weight*ms, # ',' to avoid extra newline
     target_weight = '%s\n' % alpha
@@ -50,6 +56,47 @@ def combine_domains(S, T, ms, mt):
 
     return mS + mT
 
+ALPHAS = [x*0.05 for x in xrange(20)]
+M_Ts = [250, 500, 1000, 2000]
+M_Ss = [250, 500, 1000, 2000]
+SVM_CMD = "external/libsvm-weights-3.0/svm-train -v 5 -t 0 -W %s %s"
+
+def run_translate_to_svm(infile_path):
+    outfile_path = "%s.svm_problem" % infile_path.split('.')[0]
+    translate_cmd = "python features_to_svm_problem.py label_useful_extreme_percentile"
+    subprocess.check_call(translate_cmd.split(' '), stdin=open(infile_path), stdout=open(outfile_path, 'w'))
+    return outfile_path
+
+def run_auto_experiment(options):
+    s,t = options.combine
+    header = open(s).readlines()[0].strip()
+    
+    def run_one_experiment(options, ms, mt, alpha):
+        with open(os.path.join(options.auto, '%sS+%sT.csv' % (ms, mt)), 'w') as f:
+            print >>f, header
+            for line in combine_domains(s, t, ms, mt):
+                print >>f, line.strip()
+            f.flush()
+            svm_input_file_path = run_translate_to_svm(f.name)
+        
+        weightpath = os.path.join(options.auto, '%sS+%sT-%s.wgt' % (ms, mt, alpha))
+        output_weight_file(alpha, ms, mt, fpath=weightpath)
+
+        svm_results_path = os.path.join(options.auto, '%sS+%sT-%s.results' % (ms, mt, alpha))        
+        svm_cmd = SVM_CMD % (weightpath, svm_input_file_path)
+        subprocess.check_call(svm_cmd.split(' '), stdout=open(svm_results_path, 'w'))
+
+    ms = 2500
+    for mt in M_Ts:
+        for alpha in ALPHAS:
+            run_one_experiment(options, ms, mt, alpha)
+    
+
+    mt = 2500
+    for ms in M_Ss:
+        for alpha in ALPHAS:
+            run_one_experiment(options, ms, mt, alpha)
+
 if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option('--combine', nargs=2,
@@ -57,7 +104,7 @@ if __name__ == '__main__':
                           ' Arguments: sourcefile targetfile.' \
                           ' Options -s and -t are required with this.' \
                           ' Output saved to msS+mtT.csv')
-    parser.add_option('-s', 
+    parser.add_option('-s',
                       help='Number of examples from the source domain')
     parser.add_option('-t',
                       help='Number of examples from the target domain')
@@ -73,9 +120,14 @@ if __name__ == '__main__':
     this is epecified a .wgt file will be generated to pass to libsvm
     during training. Output saved in msS+mtT-alpha.wgt'''
     parser.add_option('-a', '--alpha', help=alpha_help)
+    parser.add_option('--auto', default=None,
+        help="Automatically generate a bunch of combined files for "
+             "default experiment parameters in the given directory.")
     
     options, args = parser.parse_args()
-    if options.combine:
+    if options.auto is not None and options.combine:
+        run_auto_experiment(options)
+    elif options.combine:
         s,t = options.combine
         if not options.s or not options.t:
             print 'ms and mt are required when combining domains. See -h'
