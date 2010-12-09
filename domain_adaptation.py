@@ -6,8 +6,10 @@ import os
 import random
 import subprocess
 import sys
+import tempfile
 import csv
 import math
+
 import matplotlib
 matplotlib.use('TkAgg')      # backend
 import matplotlib.pyplot as pyplot
@@ -92,7 +94,7 @@ def combine_domains(S, T, ms, mt):
 ALPHAS = [x*0.05 for x in xrange(20)]
 M_Ts = [250, 500, 1000, 2000]
 M_Ss = [250, 500, 1000, 2000]
-SVM_CMD = "external/libsvm-weights-3.0/svm-train -v 5 -t 0 -W %s %s"
+SVM_CMD = "external/libsvm-weights-3.0/svm-train -v 5 -t 0 -W %s %s %s"
 
 def run_translate_to_svm(infile_path):
     outfile_path = "%s.svm_problem" % infile_path.split('.')[0]
@@ -179,15 +181,13 @@ if __name__ == '__main__':
     elif options.relabel:
         domain0, domain1 = options.relabel
         relabel_and_combine(domain0, domain1)
-
-    if options.alpha:
+    elif options.alpha:
         if not options.s or not options.t:
             print 'ms and mt are required when generating a wieght file. See -h'
             sys.exit(1)
         ms, mt = int(options.s), int(options.t),
         output_weight_file(float(options.alpha), ms, mt)
-
-    if options.plot:
+    elif options.plot:
         zeta, fixed = options.plot
         plot_bound(float(zeta), fixed)
 
