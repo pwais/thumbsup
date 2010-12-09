@@ -170,14 +170,26 @@ the weak classifier, $h_t(x)$, having the minimum error on the weighted
 samples is chosen greedily. The first chosen weak classifier (which is
 usually the number of words in the text with a certain threshold) has
 $\epsilon_t \approx 0.34$. However, latter classifiers have very high error rates, $\epsilon_t \approx 0.4999999$ which can
-be considered almost random decision in practice. As we revisit the
-upper bound for the training error for Adaboost \cite{adaboost}, we see
+be considered almost random decision in practice. Figure
+\ref{feature_distributions} can be a guide to gain intuition on the quality of the
+weak classifiers. As we look at the feature distributions, we observe
+they are either very sparse or cannot separate two classes. In other
+words, as we extract a weak classifier from a feature, the threshold
+cannot classify significantly better than random decision due to this
+overlap. Keeping this empirical observation in mind, as we revisit the upper bound for the training error for Adaboost \cite{adaboost}, we have
 \[
 err(H) \leq e^{-2\gamma^2 T}
 \]
-where $\forall t$, $\gamma_t \geq \gamma $ and $\gamma > 0$, so in our
+where $\forall t$, $\gamma_t \geq \gamma $ and $\gamma > 0$ and in our
 experiments we witness $\gamma$ to be arbitrarily small which explains
 the poor performance of the strong classifier.
+
+\begin{figure*}[ht]
+  \centering
+  \includegraphics[scale=.5]{features_distributions}
+  \caption{Histograms for features where blue and red stand for two classes}
+  \label{fig:dist}
+\end{figure*}
 
 Looking at the performances of Adaboost algorithm and linear SVM in
 dense and sparse configurations, we observe similar accuracies for
@@ -260,12 +272,7 @@ distance between the distributions.
 
 In the report we cited~\cite{citeulike:352583} among others. Figure~
 
-\begin{figure*}[h]
-  \centering
-  \includegraphics[scale=.5]{features_distributions}
-  \caption{This is the figure from the report}
-  \label{fig:dist}
-\end{figure*}
+
 
 \section{Features}
 \label{sec:features}
