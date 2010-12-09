@@ -121,7 +121,7 @@ classification which can be useful for SVMs and AdaBoost algorithms.
 Algorithm & Training Err. & Cross Val.(5 fold) & Training Err. & Cross Val.(5 fold)\\
 \hline
 SVM (Linear) 		& $71.0316\%$ & $70.8\%$ & $70.305\%$ & $70.2879\%$\\
-SVM (Polynomial) 	& $73.1041\%$ & $72.4316\%$ & --- & 71.3417\%\\
+SVM (Polynomial) 	& $73.1041\%$ & $72.4316\%$ & --- & $71.3417\%$\\
 SVM (Gaussian) 		& $66.053\%$ & $66.053\%$ & $68.7971\%$ & $69.1484\%$\\
 AdaBoost 			& $71.0316\%$ & $72.201\%$ & $71.3588\%$ & $70.3136\%$\\ 
 Naive Bayes 		& $70.719\%$ & $70.6727\%$ & $66.9037\%$ & $66.5781\%$\\ 
@@ -161,9 +161,25 @@ common words. Therefore, we remove this dependency factor
 when we use sparse encoding and as you can see from Tables
 \ref{tab:dense} and \ref{tab:sparse}, the training accuracy of
 the Naive Bayes classifier increases from $70.719\%$ to $76.8091$ for
-Amazon data set and from $66.9037\%$ to $77.1733$ for Yelp data set.  
+Amazon data set and from $66.9037\%$ to $77.1733$ for Yelp data set.
 
-Looking at the accuracies of AdaBoost algorithm and linear SVM in
+In many applications, Adaboost algorithm tends to have low training error, so we
+investigate the performance of Adaboost more closely. We look at our weak
+classifiers and the corresponding errors, $\epsilon_t$. At each step,
+the weak classifier, $h_t(x)$, having the minimum error on the weighted
+samples is chosen greedily. The first chosen weak classifier (which is
+usually the number of words in the text with a certain threshold) has
+$\epsilon_t \approx 0.34$. However, latter classifiers have very high error rates, $\epsilon_t \approx 0.4999999$ which can
+be considered almost random decision in practice. As we revisit the
+upper bound for the training error for Adaboost \cite{adaboost}, we see
+\[
+err(H) \leq e^{-2\gamma^2 T}
+\]
+where $\forall t$, $\gamma_t \geq \gamma $ and $\gamma > 0$, so in our
+experiments we witness $\gamma$ to be arbitrarily small which explains
+the poor performance of the strong classifier.
+
+Looking at the performances of Adaboost algorithm and linear SVM in
 dense and sparse configurations, we observe similar accuracies for
 both Amazon and Yelp data set. One of the main
 reasons is the class distribution (the choice of percentile to
@@ -172,7 +188,6 @@ effect on the accuracy. This conclusion originates from the
 observation of ``bad'' confusion matrices for the classifiers. 
 
 \section{Questions}
-Ertan: can we estimate $\gamma$ from the training error of each classifier from the AdaBoost standard out?  If $\gamma$ is large, then perhaps that might expect why AdaBoost didn't do much better than the other classifiers.  
 
 Guys, so it looks like the Amazon and Yelp data sets have almost identical distributions.
 
