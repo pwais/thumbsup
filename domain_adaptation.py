@@ -93,6 +93,9 @@ def combine_domains(S, T, ms, mt):
 
     return mS + mT
 
+# For example, to run an auto experiment do:
+# python domain_adaptation.py --auto experiment_data/adapt_amazon_to_yelp_2 experiment_data/adapt_amazon_to_yelp_2/yelp_dense_adaptation_test.svm_problem --combine experiment_data/adapt_amazon_to_yelp_2/amazon_dense_adaptation_labeled.csv experiment_data/adapt_amazon_to_yelp_2/yelp_dense_adaptation_labeled.csv
+
 ALPHAS = [x*0.05 for x in xrange(20)]
 M_Ts = [250, 500, 1000, 2000]
 M_Ss = [250, 500, 1000, 2000]
@@ -113,6 +116,10 @@ def run_auto_experiment(options):
     
     prefix_path, test_file_path = options.auto
     
+    # Make a place to put the model... don't know why tempfile is not working
+    model_path = os.path.join(prefix_path, "tmp_model")
+    open(model_path, 'w').close()
+    
     def run_one_experiment(options, ms, mt, alpha):
         with open(os.path.join(prefix_path, '%sS+%sT.csv' % (ms, mt)), 'w') as f:
             print >>f, header
@@ -123,10 +130,6 @@ def run_auto_experiment(options):
         
         weightpath = os.path.join(prefix_path, '%sS+%sT-%s.wgt' % (ms, mt, alpha))
         output_weight_file(alpha, ms, mt, fpath=weightpath)
-
-        # stow the model in a tempfile
-#        model_fd, model_path = tempfile.mkstemp()
-        model_path = os.path.join(prefix_path, "tmp_model")
 
         svm_results_path = os.path.join(prefix_path, '%sS+%sT-%s.results' % (ms, mt, alpha))        
         svm_cmd = SVM_TRAIN_CMD % (weightpath, svm_input_file_path, model_path)
@@ -143,7 +146,6 @@ def run_auto_experiment(options):
         params_to_accuracy[(ms, mt, alpha)] = acc
         
         # kill tempfiles (so that we don't run out of file descriptors in the really bad case)
-#        os.close(model_fd)
         os.close(tf_fd)
 
     ms = 2500
