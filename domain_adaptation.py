@@ -192,7 +192,7 @@ if __name__ == '__main__':
     options, args = parser.parse_args()
     if options.auto is not None and options.combine:
         params_to_accuracy = run_auto_experiment(options)
-        print simplejson.dumps(params_to_accuracy)
+        simplejson.dump(params_to_accuracy, open('params_to_accuracy.json', 'w'))
     elif options.combine:
         s,t = options.combine
         if not options.s or not options.t:
