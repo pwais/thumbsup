@@ -18,7 +18,7 @@
 \newtheorem{definition}{Definition}
 \newtheorem{question}{Question}
 
-\title{Classifying reviews}
+\title{Learning Review Classification from Different Domains}
 \author{Ertan Dogrultan, Cesar Romero, Paul Wais\\
 Computer Science Department \\
 University of California, Los Angeles\\
@@ -63,9 +63,17 @@ expands to a new product domain, the network might purchase or otherwise establi
 review content, but these reviews will not feature viewer-contributed votes.  In this setting, 
 it is useful to adapt a model trained on existing user votes to spotlight new content 
 that viewers will find useful.  In this work, we study how to fulfill this task using a
-domain adaptation technique.  
+domain adaptation technique \cite{JennLearnDiffDomains}.  
 
-The remainder of this paper proceeds as follows: ...
+The remainder of this paper proceeds as follows; first we explain how the
+features are extracted and how we label the training data including the assumptions
+we make. After that, we present the experimental results for Amazon and
+Yelp domains separately and make comments on the performance of the
+popular algorithms we choose with the support of course material. Then, we explain the
+domain adaptation setting for our problem space and we present the
+experimental results as in \cite{JennLearnDiffDomains}. At the end, we
+conclude with some remarks about our experiments and future work
+section. 
 
 
 We tell a story to motivate the problem. We mention Jenn's
