@@ -121,7 +121,7 @@ classification which can be useful for SVMs and AdaBoost algorithms.
 Algorithm & Training Err. & Cross Val.(5 fold) & Training Err. & Cross Val.(5 fold)\\
 \hline
 SVM (Linear) 		& $71.0316\%$ & $70.8\%$ & $70.305\%$ & $70.2879\%$\\
-SVM (Polynomial) 	& $73.1041\%$ & $72.4316\%$ & ? & ?\\
+SVM (Polynomial) 	& $73.1041\%$ & $72.4316\%$ & --- & 71.3417\%\\
 SVM (Gaussian) 		& $66.053\%$ & $66.053\%$ & $68.7971\%$ & $69.1484\%$\\
 AdaBoost 			& $71.0316\%$ & $72.201\%$ & $71.3588\%$ & $70.3136\%$\\ 
 Naive Bayes 		& $70.719\%$ & $70.6727\%$ & $66.9037\%$ & $66.5781\%$\\ 
@@ -138,10 +138,10 @@ Naive Bayes 		& $70.719\%$ & $70.6727\%$ & $66.9037\%$ & $66.5781\%$\\
 \hline
 Algorithm & Training Err. & Cross Val.(5 fold) & Training Err. & Cross Val.(5 fold)\\
 \hline
-SVM (Linear) 		& --- & $72.2357\%$ & --- & $70.0163\%$\\
-SVM (Polynomial) 	& --- & $66.053\%$ & --- & $70.0592\%$\\
-SVM (Gaussian) 		& --- & $72.4673\%$ & --- & $71.1062\%$\\
-AdaBoost 			& $71.68\%$   & $70.7769\%$ & $?\%$ & $?\%$\\ 
+SVM (Linear) 		& --- & $72.2357\%$ 		& --- & $70.0163\%$\\
+SVM (Polynomial) 	& --- & $66.053\%$ 		& --- & $70.0592\%$\\
+SVM (Gaussian) 		& --- & $72.4673\%$ 		& --- & $71.1062\%$\\
+AdaBoost 			& $71.68\%$   & $70.7769\%$ & $71.2091\%$ & $70.7286\%$\\ 
 Naive Bayes 		& $76.8091\%$ & $73.0346\%$ & $77.1733\%$ & $67.9567\%$\\ 
 \end{tabular}
 \caption{Accuracy results using sparse feature encoding}
