@@ -99,7 +99,7 @@ def combine_domains(S, T, ms, mt):
 ALPHAS = [x*0.05 for x in xrange(20)]
 M_Ts = [250, 500, 1000, 2000]
 M_Ss = [250, 500, 1000, 2000]
-SVM_TRAIN_CMD = "external/libsvm-weights-3.0/svm-train -v 5 -t 0 -W %s %s %s"
+SVM_TRAIN_CMD = "external/libsvm-weights-3.0/svm-train -t 0 -W %s %s %s"
 SVM_TEST_CMD = "external/libsvm-weights-3.0/svm-predict %s %s /dev/null"
 
 def run_translate_to_svm(infile_path):
