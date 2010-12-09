@@ -8,11 +8,22 @@ def sample_category(data, category, N):
     '''extract a sample of N reviews from category'''
     pass
 
-def relabel_dataset(dataset, label):
+def relabel_and_combine(domain0, domain1):
     '''change all the labels in dataset to match label'''
-    for x in open(dataset).readlines():
-        # relabel
-        pass
+    reader0 = csv.DictReader(open(domain0))
+    fieldnames = sorted(reader0.fieldnames) # force label to be at the end
+    outcsv = open('relabeled.csv', 'w')
+    print >>outcsv, ','.join(fieldnames)
+    writer = csv.DictWriter(outcsv, fieldnames)
+    # relabel domain 0
+    for r in reader0:
+        r['label_useful_extreme_percentile'] = 0
+        writer.writerow(r)
+    # relabel domain 1
+    reader1 = csv.DictReader(open(domain0))
+    for r in reader1:
+        r['label_useful_extreme_percentile'] = 1
+        writer.writerow(r)
 
 def output_weight_file(alpha, ms, mt):
     '''produce a file with ms copies of (1-alpha) and mt copies of
@@ -44,12 +55,13 @@ if __name__ == '__main__':
                       help='Number of examples from the source domain')
     parser.add_option('-t',
                       help='Number of examples from the target domain')
-    relabel_help='''Force all the examples to have the same
-               label. Arguments: file newlabel. Useful to create input
-               data for the linear classifier that learns the domain
-               of a review. The error of this classifier is then used
-               as an estimate of the distance between the
-               distributions of the domains.'''
+    relabel_help='''Combine both domains changing the label to 0 for
+               the first domain and 1 for the second one. Arguments:
+               domain0.csv domain1.csv. Useful to create input data
+               for the linear classifier that learns the domain of a
+               review. The error of this classifier is then used as an
+               estimate of the distance between the distributions of
+               the domains.'''
     parser.add_option('--relabel', nargs=2, help=relabel_help)
     alpha_help='''Expecify alpha to be used for the alpha-error. If
     this is epecified a .wgt file will be generated to pass to libsvm
@@ -71,8 +83,8 @@ if __name__ == '__main__':
         for x in combine_domains(s, t, ms, mt):
             print >>outfile, x.strip()
     elif options.relabel:
-        file, newlabel = options.relabel
-        relabel_dataset(file, newlabel)
+        domain0, domain1 = options.relabel
+        relabel_and_combine(domain0, domain1)
 
     if options.alpha:
         if not options.s or not options.t:
