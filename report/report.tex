@@ -99,7 +99,7 @@ Section \ref{sec:single_domain}.
 
 \section{Single Domain Experiments}
 \label{sec:single_domain}  
-We run the experiments using Support Vector Machines, Adaboost and
+We run the experiments using Support Vector Machines, AdaBoost and
 Naive Bayes with two different feature configurations. In the first
 configuration, we have different sets of words as we described in
 Section \ref{sec:features}. We compute the frequencies of those
@@ -111,7 +111,7 @@ of words. We assume every single word from these sets is a feature and
 we get the corresponding weak classifier by computing their
 frequencies. We call this feature encoding, sparse. The main
 motivation behind this approach is increasing the dimension for
-classification which can be useful for SVMs and Adaboost algorithms.
+classification which can be useful for SVMs and AdaBoost algorithms.
 
 \begin{table}[ht]
 \centering
@@ -123,7 +123,7 @@ Algorithm & Training Err. & Cross Val.(5 fold) & Training Err. & Cross Val.(5 fo
 SVM (Linear) 		& $71.0316\%$ & $70.8\%$ & $70.305\%$ & $70.2879\%$\\
 SVM (Polynomial) 	& $73.1041\%$ & $72.4316\%$ & ? & ?\\
 SVM (Gaussian) 		& $66.053\%$ & $66.053\%$ & $68.7971\%$ & $69.1484\%$\\
-Adaboost 			& $71.0316\%$ & $72.201\%$ & $71.3588\%$ & $70.3136\%$\\ 
+AdaBoost 			& $71.0316\%$ & $72.201\%$ & $71.3588\%$ & $70.3136\%$\\ 
 Naive Bayes 		& $70.719\%$ & $70.6727\%$ & $66.9037\%$ & $66.5781\%$\\ 
 \end{tabular}
 \caption{Accuracy results using dense feature encoding}
@@ -141,14 +141,14 @@ Algorithm & Training Err. & Cross Val.(5 fold) & Training Err. & Cross Val.(5 fo
 SVM (Linear) 		& --- & $72.2357\%$ & --- & $70.0163\%$\\
 SVM (Polynomial) 	& --- & $66.053\%$ & --- & $70.0592\%$\\
 SVM (Gaussian) 		& --- & $72.4673\%$ & --- & $71.1062\%$\\
-Adaboost 			& $?\%$ & $?\%$ & $?\%$ & $?\%$\\ 
+AdaBoost 			& $?\%$ & $?\%$ & $?\%$ & $?\%$\\ 
 Naive Bayes 		& $76.8091\%$ & $73.0346\%$ & $77.1733\%$ & $67.9567\%$\\ 
 \end{tabular}
 \caption{Accuracy results using sparse feature encoding}
 \label{tab:sparse}
 \end{table}
 
-Before we get into the details about SVMs and Adaboost, we would like
+Before we get into the details about SVMs and AdaBoost, we would like
 to state some facts about the Naive Bayes classifier and its
 significant performance improvement when we switch to sparse feature
 encoding. As we stated in the progress report the main problem with
@@ -163,7 +163,7 @@ when we use sparse encoding and as you can see from Tables
 the Naive Bayes classifier increases from $70.719\%$ to $76.8091$ for
 Amazon data set and from $66.9037\%$ to $77.1733$ for Yelp data set.  
 
-Looking at the accuracies of Adaboost algorithm and linear SVM in
+Looking at the accuracies of AdaBoost algorithm and linear SVM in
 dense and sparse configurations, we observe similar accuracies for
 both Amazon and Yelp data set. One of the main
 reasons is the class distribution (the choice of percentile to
@@ -171,6 +171,8 @@ label the sample as useful) has a significant
 effect on the accuracy. This conclusion originates from the
 observation of ``bad'' confusion matrices for the classifiers. 
 
+\section{Question}
+Ertan: can we estimate $\gamma$ from the training error of each classifier from the AdaBoost standard out?  If $\gamma$ is large, then perhaps that might expect why AdaBoost didn't do much better than the other classifiers.  
 
 \section{Domain Adaptation}
 \label{sec:background}
@@ -234,7 +236,7 @@ experiments~\cite{weka}.
 \label{sec:learning-reviews}
 
 We use three different models to learn the quality of the reviews:
-Support Vector MAchines (SVMs), Adaboost, and Naive Bayes.
+Support Vector MAchines (SVMs), AdaBoost, and Naive Bayes.
 
 \emph{Our original data includes a lot of noise. We can probably talk
   here about taking only the extreme cases: either very good (over
