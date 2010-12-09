@@ -133,11 +133,13 @@ def run_auto_experiment(options):
 
         svm_results_path = os.path.join(prefix_path, '%sS+%sT-%s.results' % (ms, mt, alpha))        
         svm_cmd = SVM_TRAIN_CMD % (weightpath, svm_input_file_path, model_path)
+        print "Executing %s" % svm_cmd
         subprocess.check_call(svm_cmd.split(' '), stdout=open(svm_results_path, 'w'))
         
         # save stdout in a tempfile
         tf_fd, tf_path = tempfile.mkstemp()
         svm_test_cmd = SVM_TEST_CMD % (test_file_path, model_path)
+        print "Executing %s" % svm_test_cmd
         subprocess.check_call(svm_test_cmd.split(' '), stdout=open(tf_path, 'w'))
         
         # record the accuracy
