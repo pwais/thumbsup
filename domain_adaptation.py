@@ -2,6 +2,7 @@
 from optparse import OptionParser
 import random
 import sys
+import csv
 
 def sample_category(data, category, N):
     '''extract a sample of N reviews from category'''
@@ -24,13 +25,11 @@ def output_weight_file(alpha, ms, mt):
     print >>outfile, target_weight*mt
     outfile.close()
 
-def combine_domains(source, target, ms, mt):
+def combine_domains(S, T, ms, mt):
     '''Produces a set with reviews from both domains with ms source
     reviews and mt target reviews.'''
-    S = [r.strip() for r in open(source).xreadlines()]
-    T = [r.strip() for r in open(target).xreadlines()]
-    mS = random.sample(S, ms)
-    mT = random.sample(T, mt)
+    mS = random.sample(open(S).readlines()[1:], ms)
+    mT = random.sample(open(T).readlines()[1:], mt)
 
     return mS + mT
 
@@ -65,8 +64,12 @@ if __name__ == '__main__':
             sys.exit(1)
         ms, mt = int(options.s), int(options.t)
         outfile = open('%sS+%sT.csv' % (ms, mt), 'w')
+        # print header first. don't use csv dict reader to make it
+        # simpler
+        header = open(s).readlines()[0].strip()
+        print >>outfile, header
         for x in combine_domains(s, t, ms, mt):
-            print >>outfile, x
+            print >>outfile, x.strip()
     elif options.relabel:
         file, newlabel = options.relabel
         relabel_dataset(file, newlabel)
