@@ -8,8 +8,8 @@ import sys
 JAVA_CMD = "java -Xmx2g -cp external/weka/weka.jar:external/weka/libsvm.jar"
 
 WEKA_CLASSIFIER_CMDS = {
-    'adaboost': 
-        JAVA_CMD + "weka.classifiers.meta.AdaBoostM1 -D -x 5 -i -k -t %s -d %s",
+#    'adaboost': 
+#        JAVA_CMD + "weka.classifiers.meta.AdaBoostM1 -D -x 5 -i -k -t %s -d %s",
     'svm_linear': 
         #"weka.classifiers.functions.LibSVM -D -x 5 -i -k -K 0 -t %s -d %s",
 	"external/libsvm-weights-3.0/svm-train -t 0 -v 5 %s %s",
@@ -19,8 +19,8 @@ WEKA_CLASSIFIER_CMDS = {
     'svm_rbf': 
         #"weka.classifiers.functions.LibSVM -D -x 5 -i -k -K 3 -t %s -d %s",
 	"external/libsvm-weights-3.0/svm-train -t 2 -g 10 -v 5 %s %s",
-    'naive_bayes': 
-        JAVA_CMD + "weka.classifiers.bayes.NaiveBayes -D -x 5 -i -k -threshold-file bayes_threshes.csv -t %s -d %s",
+#    'naive_bayes': 
+#        JAVA_CMD + "weka.classifiers.bayes.NaiveBayes -D -x 5 -i -k -threshold-file bayes_threshes.csv -t %s -d %s",
 }
 
 if __name__ == '__main__':
@@ -36,5 +36,5 @@ if __name__ == '__main__':
         print "Running: %s saving stdout to %s" % (cmd_txt, txt_out_name)
         
         with open(txt_out_name, 'w') as stdoutf:
-            subprocess.check_call(full_cmd.split(' '), stdout=stdoutf)
+            subprocess.check_call(cmd_txt.split(' '), stdout=stdoutf)
 

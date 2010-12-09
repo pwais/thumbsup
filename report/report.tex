@@ -43,6 +43,7 @@ work~\cite{PangSentimentClassification}.
 \section{Feature Extraction and Labelling the Data}
 We have divided the features into several categories.
 \subsection{Features}
+\label{sec:features}
 \subsubsection{Word Frequencies and Counts}
 Our simplest feature is the number of words in the review. Similarly,
 we calculate the average number of words per sentence and
@@ -89,6 +90,69 @@ Section \ref{sec:single_domain}.
 
 \section{Single Domain Experiments}
 \label{sec:single_domain}  
+We run the experiments using Support Vector Machines, Adaboost and
+Naive Bayes with two different feature configurations. In the first
+configuration, we have different sets of words as we described in
+Section \ref{sec:features}. We compute the frequencies of those
+words and use each calculated frequency as a single feature. We call
+this feature encoding, dense. 
+
+Our second feature encoding approach aims to generate more weak classifiers out of the sets
+of words. We assume every single word from these sets is a feature and
+we get the corresponding weak classifier by computing their
+frequencies. We call this feature encoding, sparse. The main
+motivation behind this approach is increasing the dimension for
+classification which can be useful for SVMs and Adaboost algorithms.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{c | c c | c c}
+ & \multicolumn{2}{|c|}{Amazon} & \multicolumn{2}{|c}{Yelp} \\
+\hline
+Algorithm & Training Err. & Cross Val.(5 fold) & Training Err. & Cross Val.(5 fold)\\
+\hline
+SVM (linear) & $71.0316\%$ & $70.8\%$ & $70.305\%$ & $70.2879\%$\\
+SVM (polynomial) & $73.1041\%$ & $72.4316\%$ & ? & ?\\
+SVM (Gaussian) & $66.053\%$ & $66.053\%$ & $68.7971\%$ & $69.1484\%$\\
+Adaboost & $71.0316\%$ & $72.201\%$ & $71.3588\%$ & $70.3136\%$\\ 
+Naive Bayes & $70.719\%$ & $70.6727\%$ & $66.9037\%$ & $66.5781\%$\\ 
+\end{tabular}
+\caption{Accuracy results using dense feature encoding}
+\label{tab:dense}
+\end{table}
+
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{c | c c | c c}
+ & \multicolumn{2}{|c|}{Amazon} & \multicolumn{2}{|c}{Yelp} \\
+\hline
+Algorithm & Training Err. & Cross Val.(5 fold) & Training Err. & Cross Val.(5 fold)\\
+\hline
+SVM (linear) & $?\%$ & $?\%$ & $?\%$ & $?\%$\\
+SVM (polynomial) & $?\%$ & $?\%$ & $?\%$ & $?\%$\\
+SVM (Gaussian) & $?\%$ & $?\%$ & $?\%$ & $?\%$\\
+Adaboost & $?\%$ & $?\%$ & $?\%$ & $?\%$\\ 
+Naive Bayes & $76.8091\%$ & $73.0346\%$ & $77.1733\%$ & $67.9567\%$\\ 
+\end{tabular}
+\caption{Accuracy results using sparse feature encoding}
+\label{tab:sparse}
+\end{table}
+
+Before we get into the details about SVMs and Adaboost, we would like
+to state some facts about the Naive Bayes classifier and its
+significant performance improvement when we switch to sparse feature
+encoding. As we stated in the progress report the main problem with
+this classifier is claimed to be the lack of low entropy feature
+distributions \cite{naivebayes}. We pointed that the unrealistic
+assumption of conditional independence between the features hurts the classification
+significantly which is the nature of dense feature encoding. There are
+some overlaps in the contextual meaning of those lists as well as
+common words. Therefore, we remove this dependency factor
+when we use sparse encoding and as you can see from Tables
+\ref{tab:dense} and \ref{tab:sparse}, the training accuracy of
+the Naive Bayes classifier increases from $70.719\%$ to $76.8091$ for
+Amazon data set and from $66.9037\%$ to $77.1733$ for Yelp data set.  
 
 
 
@@ -197,7 +261,7 @@ Jenn's domain adaption paper \cite{JennLearnDiffDomains}\\
 ANEW paper \cite{DoddsANEWPaper}\\
 Pang et al sentiment classification \cite{PangSentimentClassification}\\
 The WEKA paper that they ask users to cite \cite{weka} \\
-
+Naive Bayes paper \cite{naivebayes}
 \bibliographystyle{IEEEtran}
 \bibliography{IEEEabrv,bib}
 
