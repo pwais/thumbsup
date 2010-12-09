@@ -46,11 +46,34 @@ Los Angeles, California 90095\\
 \section{Introduction}
 \label{sec:introduction}
 
+Review-based social networks empower users to make informed purchasing decisions.  Amazon and Yelp are 
+two such networks that feature millions of user-contributed consumer product and local business reviews.  
+A central challenge facing these networks is the task of quickly connecting users with useful 
+review content.  For example, many products and businesses on these websites feature hundreds of
+user-contributed reviews, so the site must automatically identify and spotlight the most relevant 
+of these reviews in order to keep viewers engaged.  In order to surface the best content, many 
+review-based social networks employ a user voting mechanism that enables viewers to anonymously 
+vote a review as ``useful.''  Unfortunately, though many viewers do make use of this feature, most 
+reviews do not recieve votes (see Figure 1 TODO pwais).  In this work, we study applying modern 
+machine learning algorithms to textual review features in order to automatically predict if a 
+review will recieve ``useful'' votes.
+
+An additional problem facing these networks is to spotlight quality content in emerging 
+areas of the site.  For example, when a social network extends to a new foreign language or
+expands to a new product domain, the network might purchase or otherwise establish seed 
+review content, but these reviews will not feature viewer-contributed votes.  In this setting, 
+it is useful to adapt a model trained on existing user votes to spotlight new content 
+that viewers will find useful.  In this work, we study how to fulfill this task using a
+domain adaptation technique.  
+
+The remainder of this paper proceeds as follows: ...
+
+
 We tell a story to motivate the problem. We mention Jenn's
 work~\cite{JennLearnDiffDomains} and the sentiment classification
 work~\cite{PangSentimentClassification}.
 
-\section{Feature Extraction and Labelling the Data}
+\section{Feature Extraction and Labeling the Data}
 We have divided the features into several categories.
 \subsection{Features}
 \label{sec:features}
@@ -100,9 +123,11 @@ Section \ref{sec:single_domain}.
 
 \section{Single Domain Experiments}
 \label{sec:single_domain}  
-We run the experiments using Support Vector Machines, AdaBoost and
-Naive Bayes with two different feature configurations. In the first
-configuration, we have different sets of words as we described in
+We run the experiments using the open-source data mining software WEKA \cite{weka}
+and present the results for three algorithms; Support Vector Machines, Adaboost and
+Naive Bayes with two different feature encodings. 
+
+In the first encoding, we have different sets of words as we described in
 Section \ref{sec:features}. We compute the frequencies of those
 words and use each calculated frequency as a single feature. We call
 this feature encoding, dense. 
@@ -112,7 +137,7 @@ of words. We assume every single word from these sets is a feature and
 we get the corresponding weak classifier by computing their
 frequencies. We call this feature encoding, sparse. The main
 motivation behind this approach is increasing the dimension for
-classification which can be useful for SVMs and AdaBoost algorithms.
+classification which can be useful for SVMs and Adaboost algorithms.
 
 \begin{table}[ht]
 \centering
@@ -171,14 +196,26 @@ the weak classifier, $h_t(x)$, having the minimum error on the weighted
 samples is chosen greedily. The first chosen weak classifier (which is
 usually the number of words in the text with a certain threshold) has
 $\epsilon_t \approx 0.34$. However, latter classifiers have very high error rates, $\epsilon_t \approx 0.4999999$ which can
-be considered almost random decision in practice. As we revisit the
-upper bound for the training error for Adaboost \cite{adaboost}, we see
+be considered almost random decision in practice. Figure
+\ref{feature_distributions} can be a guide to gain intuition on the quality of the
+weak classifiers. As we look at the feature distributions, we observe
+they are either very sparse or cannot separate two classes. In other
+words, as we extract a weak classifier from a feature, the threshold
+cannot classify significantly better than random decision due to this
+overlap. Keeping this empirical observation in mind, as we revisit the upper bound for the training error for Adaboost \cite{adaboost}, we have
 \[
 err(H) \leq e^{-2\gamma^2 T}
 \]
-where $\forall t$, $\gamma_t \geq \gamma $ and $\gamma > 0$, so in our
+where $\forall t$, $\gamma_t \geq \gamma $ and $\gamma > 0$ and in our
 experiments we witness $\gamma$ to be arbitrarily small which explains
 the poor performance of the strong classifier.
+
+\begin{figure*}[ht]
+  \centering
+  \includegraphics[scale=.5]{features_distributions}
+  \caption{Histograms for features where blue and red stand for two classes}
+  \label{fig:dist}
+\end{figure*}
 
 Looking at the performances of Adaboost algorithm and linear SVM in
 dense and sparse configurations, we observe similar accuracies for
@@ -221,6 +258,9 @@ for this comparison, so we leave this task as a future work.
 
 Guys, so it looks like the Amazon and Yelp data sets have almost identical distributions.
 
+This figure should go to domain adaptation section for the explanation
+of distance measure \_ ertan
+
 \begin{figure*}[h]
 	\centering
 	\includegraphics[width=0.5\linewidth]{adaptation_unlabeled_features}
@@ -256,49 +296,8 @@ We train a linear classifier to learn to which domain a review
 belongs. The error of this classifier is used as an estimate of the
 distance between the distributions.
 
-\section{Mid-quarter report}
-\label{sec:mid-quarter-report}
 
-In the report we cited~\cite{citeulike:352583} among others. Figure~
-
-\begin{figure*}[h]
-  \centering
-  \includegraphics[scale=.5]{features_distributions}
-  \caption{This is the figure from the report}
-  \label{fig:dist}
-\end{figure*}
-
-\section{Features}
-\label{sec:features}
-
-A concise and example-driven description of all our features.  This
-will probably take a little while to write :). And we should probably
-have a reference to ANEW~\cite{DoddsANEWPaper}.
-
-Link to our github:
-\url{https://github.com/pwais/thumbsup}
-
-\section{Experiments}
-\label{sec:experiments}
-
-We present two sets of experiments. In the first set, we use different
-models to learn the quality of the review using the features described
-in~\ref{sec:features}. Then, we use the model that performs best in
-the first set of experiments to classify reviews in a domain
-adaptation setting. We use the WEKA machine learning suite for our
-experiments~\cite{weka}.
-
-\subsection{Learning Reviews}
-\label{sec:learning-reviews}
-
-We use three different models to learn the quality of the reviews:
-Support Vector MAchines (SVMs), AdaBoost, and Naive Bayes.
-
-\emph{Our original data includes a lot of noise. We can probably talk
-  here about taking only the extreme cases: either very good (over
-  85th percentile) or very bad (under 5th percentile).}
-
-\subsection{Domain Adaptation}
+\subsection{Domain Adaptation Experiments}
 \label{sec:domain-adaptation}
 
 In this set of experiments we use the \emph{insert model here} to
