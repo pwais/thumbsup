@@ -185,7 +185,36 @@ both Amazon and Yelp data set. One of the main
 reasons is the class distribution (the choice of percentile to
 label the sample as useful) has a significant
 effect on the accuracy. This conclusion originates from the
-observation of ``bad'' confusion matrices for the classifiers. 
+observation of ``bad'' confusion matrices ($CM$) for the classifiers. For
+instance as we look at the confusion matrices of both algorithms in
+\ref{eq:confusion} (Amazon data set), we do not see the dominant diagonal
+picture. 
+\begin{equation}
+\label{eq:confusion}
+CM_{Adaboost} = \left(
+\begin{matrix}
+4551 & 1154\\
+1247 & 1685
+\end{matrix}
+\right)
+\qquad
+CM_{linearSVM} = \left(
+\begin{matrix}
+5486 & 219\\
+2303 & 629
+\end{matrix}
+\right)
+\end{equation}
+As we investigate further by changing the labelling method
+for the reviews, we see the effect of class distributions directly on
+the confusion matrices. An interesting perspective to compare the
+behavior of Adaboost and linear SVM might be looking at the specific
+examples represented in these confusion matrices instead of the training
+accuracy. As you can see in \ref{eq:confusion}, Adaboost is in much
+better condition than linear SVMs in this aspect. However, we believe
+we need to do a literature survey to have a better method and a more
+rigorous explanation
+for this comparison, so we leave this task as a future work.
 
 \section{Questions}
 
