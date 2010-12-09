@@ -45,11 +45,34 @@ two dozen textual and contextual features inspired by Pang et al. \cite{PangSent
 \section{Introduction}
 \label{sec:introduction}
 
+Review-based social networks empower users to make informed purchasing decisions.  Amazon and Yelp are 
+two such networks that feature millions of user-contributed consumer product and local business reviews.  
+A central challenge facing these networks is the task of quickly connecting users with useful 
+review content.  For example, many products and businesses on these websites feature hundreds of
+user-contributed reviews, so the site must automatically identify and spotlight the most relevant 
+of these reviews in order to keep viewers engaged.  In order to surface the best content, many 
+review-based social networks employ a user voting mechanism that enables viewers to anonymously 
+vote a review as ``useful.''  Unfortunately, though many viewers do make use of this feature, most 
+reviews do not recieve votes (see Figure 1 TODO pwais).  In this work, we study applying modern 
+machine learning algorithms to textual review features in order to automatically predict if a 
+review will recieve ``useful'' votes.
+
+An additional problem facing these networks is to spotlight quality content in emerging 
+areas of the site.  For example, when a social network extends to a new foreign language or
+expands to a new product domain, the network might purchase or otherwise establish seed 
+review content, but these reviews will not feature viewer-contributed votes.  In this setting, 
+it is useful to adapt a model trained on existing user votes to spotlight new content 
+that viewers will find useful.  In this work, we study how to fulfill this task using a
+domain adaptation technique.  
+
+The remainder of this paper proceeds as follows: ...
+
+
 We tell a story to motivate the problem. We mention Jenn's
 work~\cite{JennLearnDiffDomains} and the sentiment classification
 work~\cite{PangSentimentClassification}.
 
-\section{Feature Extraction and Labelling the Data}
+\section{Feature Extraction and Labeling the Data}
 We have divided the features into several categories.
 \subsection{Features}
 \label{sec:features}
