@@ -145,7 +145,7 @@ def run_auto_experiment(options):
         # record the accuracy
         accuracy_line = open(tf_path, 'r').readlines()[-1]
         acc = float(re.findall("Accuracy = (.*)\% .*", accuracy_line)[0])
-        params_to_accuracy[(ms, mt, alpha)] = acc
+        params_to_accuracy[str(ms, mt, alpha)] = acc
         
         # kill tempfiles (so that we don't run out of file descriptors in the really bad case)
         os.close(tf_fd)
