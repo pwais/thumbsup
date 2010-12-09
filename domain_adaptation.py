@@ -7,6 +7,39 @@ import random
 import subprocess
 import sys
 import csv
+import math
+import matplotlib
+matplotlib.use('TkAgg')      # backend
+import matplotlib.pyplot as pyplot
+
+def plot_bound(zeta, fix):
+    '''plots the bound given zeta. Fix says which sample size is fixed
+    (S or T)'''
+    X = [0.1*x for x in range(11)]
+    S = [2500]
+    T = [250, 500, 1000, 2000]
+    if fix == 'T': S,T = T,S
+    for ms in S:
+        for mt in T:
+            # this is one curve
+            beta = float(mt) / (ms + mt)
+            Y = []
+            for alpha in X:
+                Y.append(bound(alpha,beta, ms+mt, zeta))
+                
+            print ms, mt
+            print 'x', X, len(X)
+            print 'Y', Y, len(Y)
+            pyplot.plot(X, Y)
+            
+
+    pyplot.show()
+
+def bound(alpha, beta, m, zeta=1):
+    # we have 28 features
+    C = 1601
+    C = 28 + 1
+    return math.sqrt((alpha**2/beta + (1-alpha)**2/(1-beta))*C/m)+(1-alpha)*zeta
 
 def sample_category(data, category, N):
     '''extract a sample of N reviews from category'''
@@ -123,6 +156,9 @@ if __name__ == '__main__':
     parser.add_option('--auto', default=None,
         help="Automatically generate a bunch of combined files for "
              "default experiment parameters in the given directory.")
+    parser.add_option('--plot', nargs=2, default=[1, 'S'],
+                      help='plots the bound given zeta and '
+                      'fixing either S or T. Arguments: zeta {S|T}')
     
     options, args = parser.parse_args()
     if options.auto is not None and options.combine:
@@ -150,4 +186,8 @@ if __name__ == '__main__':
             sys.exit(1)
         ms, mt = int(options.s), int(options.t),
         output_weight_file(float(options.alpha), ms, mt)
+
+    if options.plot:
+        zeta, fixed = options.plot
+        plot_bound(float(zeta), fixed)
 
