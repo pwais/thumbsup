@@ -24,7 +24,8 @@ if __name__ == '__main__':
         label = str(2*int(eval(feature_row[label_feature_name])) - 1)
         values = []
         for key_idx, key in enumerate(feature_keys):
-            values.append("%s:%s" % (key_idx + 1, feature_row[key]))
+            if feature_row.get(key):
+                values.append("%s:%s" % (key_idx + 1, feature_row[key]))
         return ' '.join([label] + values)
     
     # Write out the first row
