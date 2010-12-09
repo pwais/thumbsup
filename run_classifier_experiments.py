@@ -5,7 +5,7 @@ import os
 import subprocess
 import sys
 
-JAVA_CMD = "java -cp external/weka/weka.jar:external/weka/libsvm.jar"
+JAVA_CMD = "java -Xmx2g -cp external/weka/weka.jar:external/weka/libsvm.jar"
 
 WEKA_CLASSIFIER_CMDS = {
     'adaboost': 

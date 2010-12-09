@@ -21,7 +21,7 @@ if __name__ == '__main__':
                           k != 'feature_typos')]
 
     def to_svm_input_line(feature_row):
-        label = str(2*int(float(feature_row[label_feature_name]) > 0.2) - 1)
+        label = str(2*int(eval(feature_row[label_feature_name])) - 1)
         values = []
         for key_idx, key in enumerate(feature_keys):
             values.append("%s:%s" % (key_idx + 1, feature_row[key]))
