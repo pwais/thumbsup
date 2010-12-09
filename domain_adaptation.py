@@ -95,6 +95,7 @@ ALPHAS = [x*0.05 for x in xrange(20)]
 M_Ts = [250, 500, 1000, 2000]
 M_Ss = [250, 500, 1000, 2000]
 SVM_TRAIN_CMD = "external/libsvm-weights-3.0/svm-train -v 5 -t 0 -W %s %s %s"
+SVM_TEST_CMD = "external/libsvm-weights-3.0/svm-predict %s %s /dev/null"
 
 def run_translate_to_svm(infile_path):
     outfile_path = "%s.svm_problem" % infile_path.split('.')[0]
@@ -118,13 +119,16 @@ def run_auto_experiment(options):
         output_weight_file(alpha, ms, mt, fpath=weightpath)
 
         # stow the model in a tempfile
-        tf_fd, tf_path = tempfile.mkstemp()
+        model_fd, model_path = tempfile.mkstemp()
 
         svm_results_path = os.path.join(options.auto, '%sS+%sT-%s.results' % (ms, mt, alpha))        
-        svm_cmd = SVM_TRAIN_CMD % (weightpath, svm_input_file_path, tf_path)
+        svm_cmd = SVM_TRAIN_CMD % (weightpath, svm_input_file_path, model_path)
         subprocess.check_call(svm_cmd.split(' '), stdout=open(svm_results_path, 'w'))
         
-        
+        # save stdout in a tempfile
+        tf_fd, tf_path = tempfile.mkstemp()
+        svm_test_cmd = SVM_TEST_CMD % (svm_input_file_path, model_path)
+        subprocess.check_call(svm_cmd.split(' '), 
 
     ms = 2500
     for mt in M_Ts:

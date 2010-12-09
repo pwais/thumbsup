@@ -171,8 +171,19 @@ label the sample as useful) has a significant
 effect on the accuracy. This conclusion originates from the
 observation of ``bad'' confusion matrices for the classifiers. 
 
-\section{Question}
+\section{Questions}
 Ertan: can we estimate $\gamma$ from the training error of each classifier from the AdaBoost standard out?  If $\gamma$ is large, then perhaps that might expect why AdaBoost didn't do much better than the other classifiers.  
+
+Guys, so it looks like the Amazon and Yelp data sets have almost identical distributions.
+
+\begin{figure*}[h]
+	\centering
+	\includegraphics[width=0.5\linewidth]{adaptation_unlabeled_features}
+	\caption{Feature distributions for the unlabeled data sets $U_{\textrm{A}}$ and $U_{\textrm{Y}}$.  
+	Blue indicates Amazon data feature values and red indicates Yelp feature values.}
+\end{figure*}
+
+I tried running the SVM again on our data set and it got 50\% accuracy... perhaps when a data set is not separable at all an SVM picks hyperplanes that just split the data in half... in any case, I think our distance $\zeta(U_{\textrm{A}}, U_{\textrm{Y}})$ should actually be more like 0?
 
 \section{Domain Adaptation}
 \label{sec:background}
