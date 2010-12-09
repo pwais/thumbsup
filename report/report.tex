@@ -234,6 +234,9 @@ for this comparison, so we leave this task as a future work.
 
 Guys, so it looks like the Amazon and Yelp data sets have almost identical distributions.
 
+This figure should go to domain adaptation section for the explanation
+of distance measure \_ ertan
+
 \begin{figure*}[h]
 	\centering
 	\includegraphics[width=0.5\linewidth]{adaptation_unlabeled_features}
@@ -270,27 +273,7 @@ belongs. The error of this classifier is used as an estimate of the
 distance between the distributions.
 
 
-\section{Experiments}
-\label{sec:experiments}
-
-We present two sets of experiments. In the first set, we use different
-models to learn the quality of the review using the features described
-in~\ref{sec:features}. Then, we use the model that performs best in
-the first set of experiments to classify reviews in a domain
-adaptation setting. We use the WEKA machine learning suite for our
-experiments~\cite{weka}.
-
-\subsection{Learning Reviews}
-\label{sec:learning-reviews}
-
-We use three different models to learn the quality of the reviews:
-Support Vector MAchines (SVMs), AdaBoost, and Naive Bayes.
-
-\emph{Our original data includes a lot of noise. We can probably talk
-  here about taking only the extreme cases: either very good (over
-  85th percentile) or very bad (under 5th percentile).}
-
-\subsection{Domain Adaptation}
+\subsection{Domain Adaptation Experiments}
 \label{sec:domain-adaptation}
 
 In this set of experiments we use the \emph{insert model here} to
