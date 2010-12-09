@@ -125,7 +125,8 @@ def run_auto_experiment(options):
         output_weight_file(alpha, ms, mt, fpath=weightpath)
 
         # stow the model in a tempfile
-        model_fd, model_path = tempfile.mkstemp()
+#        model_fd, model_path = tempfile.mkstemp()
+        model_path = os.path.join(prefix_path, "tmp_model")
 
         svm_results_path = os.path.join(prefix_path, '%sS+%sT-%s.results' % (ms, mt, alpha))        
         svm_cmd = SVM_TRAIN_CMD % (weightpath, svm_input_file_path, model_path)
@@ -142,7 +143,7 @@ def run_auto_experiment(options):
         params_to_accuracy[(ms, mt, alpha)] = acc
         
         # kill tempfiles (so that we don't run out of file descriptors in the really bad case)
-        os.close(model_fd)
+#        os.close(model_fd)
         os.close(tf_fd)
 
     ms = 2500
