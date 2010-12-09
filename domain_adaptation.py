@@ -10,19 +10,25 @@ def sample_category(data, category, N):
 
 def relabel_and_combine(domain0, domain1):
     '''change all the labels in dataset to match label'''
-    reader0 = csv.DictReader(open(domain0))
-    fieldnames = sorted(reader0.fieldnames) # force label to be at the end
+    label = 'label_useful_extreme_percentile'
     outcsv = open('relabeled.csv', 'w')
+    reader0 = csv.DictReader(open(domain0))
+    # get fieldnames manually for python 2.5
+    first_row = reader0.next()
+    fieldnames = sorted(first_row)
     print >>outcsv, ','.join(fieldnames)
     writer = csv.DictWriter(outcsv, fieldnames)
+    # write the first row modified.
+    first_row[label] = 0
+    writer.writerow(first_row)
     # relabel domain 0
     for r in reader0:
-        r['label_useful_extreme_percentile'] = 0
+        r[label] = 0
         writer.writerow(r)
     # relabel domain 1
     reader1 = csv.DictReader(open(domain0))
     for r in reader1:
-        r['label_useful_extreme_percentile'] = 1
+        r[label] = 1
         writer.writerow(r)
 
 def output_weight_file(alpha, ms, mt):
