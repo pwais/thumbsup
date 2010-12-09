@@ -99,9 +99,11 @@ Section \ref{sec:single_domain}.
 
 \section{Single Domain Experiments}
 \label{sec:single_domain}  
-We run the experiments using Support Vector Machines, AdaBoost and
-Naive Bayes with two different feature configurations. In the first
-configuration, we have different sets of words as we described in
+We run the experiments using the open-source data mining software WEKA \cite{weka}
+and present the results for three algorithms; Support Vector Machines, Adaboost and
+Naive Bayes with two different feature encodings. 
+
+In the first encoding, we have different sets of words as we described in
 Section \ref{sec:features}. We compute the frequencies of those
 words and use each calculated frequency as a single feature. We call
 this feature encoding, dense. 
@@ -111,7 +113,7 @@ of words. We assume every single word from these sets is a feature and
 we get the corresponding weak classifier by computing their
 frequencies. We call this feature encoding, sparse. The main
 motivation behind this approach is increasing the dimension for
-classification which can be useful for SVMs and AdaBoost algorithms.
+classification which can be useful for SVMs and Adaboost algorithms.
 
 \begin{table}[ht]
 \centering
@@ -267,22 +269,6 @@ We train a linear classifier to learn to which domain a review
 belongs. The error of this classifier is used as an estimate of the
 distance between the distributions.
 
-\section{Mid-quarter report}
-\label{sec:mid-quarter-report}
-
-In the report we cited~\cite{citeulike:352583} among others. Figure~
-
-
-
-\section{Features}
-\label{sec:features}
-
-A concise and example-driven description of all our features.  This
-will probably take a little while to write :). And we should probably
-have a reference to ANEW~\cite{DoddsANEWPaper}.
-
-Link to our github:
-\url{https://github.com/pwais/thumbsup}
 
 \section{Experiments}
 \label{sec:experiments}
