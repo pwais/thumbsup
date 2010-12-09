@@ -2,17 +2,19 @@
 from __future__ import with_statement
 
 from optparse import OptionParser
+import csv
+import math
 import os
 import random
+import re
 import subprocess
 import sys
 import tempfile
-import csv
-import math
 
 import matplotlib
 matplotlib.use('TkAgg')      # backend
 import matplotlib.pyplot as pyplot
+import simplejson
 
 def plot_bound(zeta, fix):
     '''plots the bound given zeta. Fix says which sample size is fixed
@@ -107,28 +109,41 @@ def run_auto_experiment(options):
     s,t = options.combine
     header = open(s).readlines()[0].strip()
     
+    params_to_accuracy = {}
+    
+    prefix_path, test_file_path = options.auto
+    
     def run_one_experiment(options, ms, mt, alpha):
-        with open(os.path.join(options.auto, '%sS+%sT.csv' % (ms, mt)), 'w') as f:
+        with open(os.path.join(prefix_path, '%sS+%sT.csv' % (ms, mt)), 'w') as f:
             print >>f, header
             for line in combine_domains(s, t, ms, mt):
                 print >>f, line.strip()
             f.flush()
             svm_input_file_path = run_translate_to_svm(f.name)
         
-        weightpath = os.path.join(options.auto, '%sS+%sT-%s.wgt' % (ms, mt, alpha))
+        weightpath = os.path.join(prefix_path, '%sS+%sT-%s.wgt' % (ms, mt, alpha))
         output_weight_file(alpha, ms, mt, fpath=weightpath)
 
         # stow the model in a tempfile
         model_fd, model_path = tempfile.mkstemp()
 
-        svm_results_path = os.path.join(options.auto, '%sS+%sT-%s.results' % (ms, mt, alpha))        
+        svm_results_path = os.path.join(prefix_path, '%sS+%sT-%s.results' % (ms, mt, alpha))        
         svm_cmd = SVM_TRAIN_CMD % (weightpath, svm_input_file_path, model_path)
         subprocess.check_call(svm_cmd.split(' '), stdout=open(svm_results_path, 'w'))
         
         # save stdout in a tempfile
         tf_fd, tf_path = tempfile.mkstemp()
-        svm_test_cmd = SVM_TEST_CMD % (svm_input_file_path, model_path)
-        subprocess.check_call(svm_cmd.split(' '), 
+        svm_test_cmd = SVM_TEST_CMD % (test_file_path, model_path)
+        subprocess.check_call(svm_test_cmd.split(' '), stdout=open(tf_path, 'w'))
+        
+        # record the accuracy
+        accuracy_line = open(tf_path, 'r').readlines()[-1]
+        acc = int(re.findall("Accuracy = (.*)\% .*", accuracy_line)[0])
+        params_to_accuracy[(ms, mt, alpha)] = acc
+        
+        # kill tempfiles (so that we don't run out of file descriptors in the really bad case)
+        os.close(model_fd)
+        os.close(tf_fd)
 
     ms = 2500
     for mt in M_Ts:
@@ -140,6 +155,8 @@ def run_auto_experiment(options):
     for ms in M_Ss:
         for alpha in ALPHAS:
             run_one_experiment(options, ms, mt, alpha)
+    
+    return params_to_accuracy
 
 if __name__ == '__main__':
     parser = OptionParser()
@@ -164,16 +181,18 @@ if __name__ == '__main__':
     this is epecified a .wgt file will be generated to pass to libsvm
     during training. Output saved in msS+mtT-alpha.wgt'''
     parser.add_option('-a', '--alpha', help=alpha_help)
-    parser.add_option('--auto', default=None,
+    parser.add_option('--auto', nargs=2, default=None,
         help="Automatically generate a bunch of combined files for "
-             "default experiment parameters in the given directory.")
+             "default experiment parameters in the given directory (first argument) "
+             "using the test file given as the second arg.")
     parser.add_option('--plot', nargs=2, default=[1, 'S'],
                       help='plots the bound given zeta and '
                       'fixing either S or T. Arguments: zeta {S|T}')
     
     options, args = parser.parse_args()
     if options.auto is not None and options.combine:
-        run_auto_experiment(options)
+        params_to_accuracy = run_auto_experiment(options)
+        print simplejson.dumps(params_to_accuracy)
     elif options.combine:
         s,t = options.combine
         if not options.s or not options.t:
