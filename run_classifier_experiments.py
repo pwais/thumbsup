@@ -35,6 +35,6 @@ if __name__ == '__main__':
         
         print "Running: %s saving stdout to %s" % (cmd_txt, txt_out_name)
         
-        with open(txt_out_name, 'w') as stdoutf:
-            subprocess.check_call(cmd_txt.split(' '), stdout=stdoutf)
+        stdoutf = open(txt_out_name, 'w')
+        subprocess.call(cmd_txt.split(' '), stdout=stdoutf)
 
