@@ -99,55 +99,56 @@ a more accurate model.
 Our approach builds on related work in sentiment classification that seeks to 
 use review text to predict the ratings of users' reviews.  Pang et al 
 \cite{PangSentimentClassification} apply several supervised machine learning 
-algorithms to movie reviews and observe that standard, untuned algorithms are 
-capable of predicting users' ratings with over $80\%$ accuracy.  They 
-hypothesize that the algorithms learn to discriminate reviews based upon 
-a small set of words that indicate sentiment.  Their model represents reviews 
-as sparse vectors in a high-dimensional space where the $i$th component 
+algorithms to movie reviews, hypothesizing that algorithms will learn to
+identify a small set of words that indicate sentiment.  Their model represents 
+reviews as sparse vectors in a high-dimensional space where the $i$th component 
 of an input vector $\vec{x}$ indciates the count or presence for a single 
-unigram or bigram.  Their experiments show that standard machine learning 
+unigram or bigram.  Their experiments show that standard, un-tuned machine learning 
 algorithms are capable of separating classes of positive- and negative-rated
-reviews 
+reviews with over $80\%$ accuracy.  
 
-Since our task is to predict usefulness (which is independent of sentiment), 
+Since usefulness is independent of sentiment (i.e. negative reviews are often
+very useful), we choose to study a slightly different set of features that
+indicate strong argument. In the next section, we briefly describe and justify
+our chosen features.
 
+\section{Feature Extraction and Defining Labels}
 
+\subsection{Word Frequencies and Counts}
+In an attempt to measure user effort, we measure as features the number of 
+words in the review, the mean number of words per sentence, and the total 
+number of sentences in the review. Additionally, we count the number of URLs, 
+since users who include links tend to put more effort into reviews.
+
+Furthermore, we measure the frequencies of several different categories of 
+words and n-grams.  In particular, these categories include sets of words that
+are indicative of time, space, comparisons, contrasts, summarizations,
+suggestions, and emphasis.  For instance, comparison words are \emph{similarly,
+likewise,} etc., and contrast ngrams are \emph{but, however, nevertheless, 
+in spite of,} etc. We also measure frequencies of SAT and GRE words.  We 
+normalize each count by dividing by the review's word count.
+
+\subsection{Grammatical, Spelling, and Stylistic Errors}
+Poor style and grammar often distracts users.  We count the number of grammar 
+and spelling errors by feeding each review into Microsoft Word. We also 
+consider the number of capitalization mistakes and words with all capital 
+letters. As before, we normalize these feature values by dividing
+counts by review word count.
+
+\subsection{Emphatic Word Scores}
+Emphatic reviews are often more useful than neutral opinions.  We define a 
+textual feature that measures sentiment strength independent of postivity
+using data from the the Affective Norms from English Words\cite{BradleyANEW} 
+
+ we draw on a psychological model
+of 
+we 
+
+ is 
 Dodds et al \cite{DoddsANEWPaper} have conducted a related study and build upon work in 
 pyscholinguistics towards building a ``hedonometer'' capable of predicting positive 
 and negative sentiment from unlabeled text.  Their work devises a simple model utilizing the 
 valence scores of words from the ANEW data set
-
-
-Their model represents reviews as sparse vectors in a high-dimensional space where the $i$th component 
-of a vector $\vec{x}$ indciates the count or presence for a single unigram or bigram.  They observe
-that SVMs peform slightly better when trained on vectors of word presence rather than counts.
-
-
-\section{Feature Extraction and Labeling the Data}
-We have divided the features into several categories.
-\subsection{Word Frequencies and Counts}
-Our simplest feature is the number of words in the review. Similarly,
-we calculate the average number of words per sentence and total number
-of sentences in the review. Additionally, we count the number of URLs.
-
-We obtain many different sets of words with respect to their
-contextual meanings (i.g. time, space, comparison, contrast, summary,
-suggestion, emphasis) and we count the number of occurrences of these
-in a review. For instance, comparison words are \emph{similarly,
-  likewise,} etc., contrast words are \emph{but, however,
-  nevertheless, in spite of,} etc. Moreover, we have some other sets
-of special words such as SAT, GRE lists on which we apply the same
-procedure.  We normalize by dividing each of them by the total number
-of words in the body of the review and use them as features.
-
-\subsection{Sentential Errors}
-We count the grammar and spelling errors with libraries using
-Microsoft Word. We also consider the number of capitalization
-mistakes and words with all capital letters. Like before, we divide
-these counts by the total number of words in the review.
-
-\subsection{Scores}
-ANEW~\cite{DoddsANEWPaper}.
 
 \subsection{Product/Service Related Features} 
 This feature is somewhat different than the previous ones; it depends
@@ -167,6 +168,7 @@ useful if its positive count is in the $75^{th}$ percentile or above
 and not useful if they are in the $5^{th}$ percentile or below. We
 observe the reflection of this approach on the confusion matrices. We
 will discuss more about this in Section \ref{sec:single_domain}.
+
 
 \section{Single Domain Experiments}
 \label{sec:single_domain}  
