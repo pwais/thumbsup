@@ -59,7 +59,7 @@ engaged.  In order to surface the best content, many review-based
 social networks employ a user voting mechanism that enables viewers to
 anonymously vote a review as ``useful.''  Unfortunately, though many
 viewers do make use of this feature, most reviews do not receive votes
-(see Figure 1 TODO pwais).  In this work, we study applying modern
+(see Figure \ref{fig:vote-histos}).  In this work, we study applying modern
 machine learning algorithms to textual review features in order to
 automatically predict if a review will receive ``useful'' votes.
 
@@ -84,6 +84,15 @@ engineering and classifier tuning, we observe high error rates for both of the
 aforementioned experiments.  We find that the problem of predicting usefulness 
 is harder than the related problem of sentiment classification.  We conclude 
 with suggestions for additional features and experiments that may result in a more accurate model.
+
+\begin{figure}[h]
+    \label{fig:vote-histos}
+	\centering
+	\includegraphics[width=0.30\linewidth]{amz_histo}
+    \includegraphics[width=0.30\linewidth]{yelp_histo}
+	\caption{Histograms of votes in samples of 15,000 Amazon and Yelp reviews.
+    Most reviews have zero votes.}
+\end{figure}
 
 \section{Setting and Related Work}
 Our approach builds on related work in sentiment classification that seeks to use 
