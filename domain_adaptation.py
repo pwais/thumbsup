@@ -27,7 +27,8 @@ def plot_err(ms, mt, jsonfile):
         err = 1 - acc
         Y.append(err)
     l = str(ms) if mt==2500 else str(mt)
-    pyplot.plot(X, Y, label=l)
+    mark = {'250':'-o', '500':'-s', '1000':'-*', '2000':'-D'}
+    pyplot.plot(X, Y, mark[l], label=l)
     
 def plot_bound(ms, mt, zeta, fix):
     X = [0.1*x for x in range(11)]
@@ -36,7 +37,8 @@ def plot_bound(ms, mt, zeta, fix):
     for alpha in X:
         Y.append(bound(alpha,beta, ms+mt, zeta))
     l = str(ms) if mt==2500 else str(mt)
-    pyplot.plot(X, Y, label=l)
+    mark = {'250':'-o', '500':'-s', '1000':'-*', '2000':'-D'}
+    pyplot.plot(X, Y, mark[l], label=l)
 
 def plot_curve(curve, zeta, fix):
     '''plots the curve given zeta. Fix says which sample size is fixed
