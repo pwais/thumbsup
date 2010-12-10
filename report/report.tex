@@ -292,38 +292,39 @@ I tried running the SVM again on our data set and it got 50\% accuracy... perhap
 \section{Domain Adaptation}
 \label{sec:background}
 
-\emph{Here, we explain what domain adaptation is and its important
-prameters.}
 We are interested in being able to classify reviews in general - not
-just from a specific source or category. A natural problem to consider
-is Domain Adaptation. In this setting, there is a source domain $S$
-and a target domain $T$. The goal is to be able to classify reviews in
-$T$ when most of our data comes from $S$. 
+just from a specific source or category. This would allow for reviews
+to be classified automatically even on domains where the amount of
+labeled data is very limited. This problem has been studied recently
+as \emph{domain adaptation}~\cite{JennLearnDiffDomains}. In this
+problem, there is a source domain $S$ and a target domain $T$. The
+goal is to be able to classify reviews in $T$ when most of our data
+comes from $S$. To be able to estimate a bound on the error, two
+important concepts are taken into account: the divergence between
+unlabeled data in both domains and the combined empirical error.
 
-Include the fancy Theorem here that will be used to predict the error
-of the calssifiers in the domain adaptation setting.
+In this setting, a classifier-induced divergence
+suffices~\cite{JennLearnDiffDomains}. It is obtained by training a
+linear classifier to learn to which domain a review belongs to. The
+error of this classifier is used to estimate the divergence we are
+interested in.
 
+Given the two domains we are interesting in learning a hypothesis $h$
+that minimizes an empirical error that combines both domains. This is
+precisely the $\alpha$-error defined as $\alpha \hat
+\epsilon_T(h)+(1-\alpha)\hat \epsilon_S(h)$, where $\hat \epsilon_S$
+and $\hat \epsilon_T$ are the source and target errors
+respectively~\cite{JennLearnDiffDomains}.
 
-\subsection{$\alpha$-error}
-\label{sec:alpha-error}
-
-Explain the $\alpha$-error here.
-
-Equation~(\ref{eq:alphaerror}) is an approximation to the bound on the
-$\alpha$-error~\cite{JennLearnDiffDomains}. \emph{Explain the parameters here}
+With this ingredients, an approximation to the bound is given by
+Equation~(\ref{eq:alphaerror}). Where $\zeta(U_S,U_T)$ is the
+empirical divergence and $\beta$ is the fraction of examples that come
+from the target domain.
 
 \begin{equation}
   \label{eq:alphaerror}
   f(\alpha)=\sqrt{\frac{C}{m}\left(\frac{\alpha^2}{\beta} + \frac{(1-\alpha)^2}{1-\beta}\right)}+(1-\alpha)\zeta(U_S,U_T)
 \end{equation}
-
-\subsection{Estimating the distance}
-\label{sec:estimating-distance}
-
-We train a linear classifier to learn to which domain a review
-belongs. The error of this classifier is used as an estimate of the
-distance between the distributions.
-
 
 \subsection{Experiments}
 \label{sec:domain-adaptation}
