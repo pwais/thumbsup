@@ -273,16 +273,13 @@ CM_{linearSVM} = \left(
 \end{matrix}
 \right)
 \end{equation}
-As we investigate further by changing the labeling method
-for the reviews, we see the effect of class distributions directly on
-the confusion matrices. An interesting perspective to compare the
-behavior of Adaboost and linear SVM might be looking at the specific
-examples represented in these confusion matrices instead of the training
-accuracy. As you can see in (\ref{eq:confusion}), Adaboost is in much
-better condition than linear SVMs in this aspect. However, we believe
-we need to do a literature survey to have a better method and a more
-rigorous explanation
-for this comparison, so we leave this task as a future work.
+As we investigate further by changing the labeling for the reviews, we
+see its effect on class distributions directly in the confusion
+matrices. We could compare the behavior of Adaboost and linear SVM by
+looking at the specific examples represented in these confusion
+matrices instead of the training
+accuracy. Equation~(\ref{eq:confusion}) shows how Adaboost is
+performing better than linear SVMs in this aspect.
 
 \section{Domain Adaptation}
 \label{sec:background}
@@ -321,12 +318,13 @@ from the target domain.
   f(\alpha)=\sqrt{\frac{C}{m}\left(\frac{\alpha^2}{\beta} + \frac{(1-\alpha)^2}{1-\beta}\right)}+(1-\alpha)\zeta(U_S,U_T)
 \end{equation}
 
-\begin{figure*}[h]
+\begin{figure}[h]
 	\centering
 	\includegraphics[width=0.75\linewidth]{adaptation_unlabeled_features}
 	\caption{Feature distributions for the unlabeled data sets $U_{\textrm{A}}$ and $U_{\textrm{Y}}$.  
 	Blue indicates Amazon data feature values and red indicates Yelp feature values.}
-\end{figure*}
+      \label{fig:dist}
+\end{figure}
 
 \subsection{Experiments}
 \label{sec:domain-adaptation}
@@ -336,7 +334,11 @@ from a combination of both domains; Yelp is considered to be the
 \emph{target domain} and Amazon the \emph{source domain}.
 
 We estimate the divergence $\zeta(U_S,U_T)$ as described in the
-previous section combining 15,000 examples from each domain.
+previous section combining 15,000 examples from each
+domain. Figure~\ref{fig:dist} shows the feature distributions for both
+domains. The big overlap suggest that the domains are very similar,
+which would imply low divergence. However, our classifier-induced
+divergence was very close to one in practice.
 
 We performed two sets of experiments. First, we fix the number of
 examples from the source domain constant $m_s=2500$, and we vary the
@@ -385,9 +387,9 @@ distribution varies keeping the $\beta$ fixed. To alter $\zeta$, we
 can consider only a specific category on each domain.
 
 For example, from the source domain (Amazon), we could consider the
-set of categories $C_S$=\{ Books, Electronics, DVDs and Clothing\};
+set of categories $C_S$=\{ Books, Electronics, DVDs, Clothing\};
 from the target domain (Yelp), we could consider category
-$C_T=$\{Restaurants\}. For each combination in $C_s\times C_T$ we
+$C_T=$\{Restaurants\}. For each combination in $C_S\times C_T$ we
 train and test a different linear classifier to estimate the distance
 between the two distributions of each configuration.
 
