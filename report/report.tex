@@ -58,10 +58,10 @@ spotlight the most relevant of these reviews in order to keep viewers
 engaged.  In order to surface the best content, many review-based
 social networks employ a user voting mechanism that enables viewers to
 anonymously vote a review as ``useful.''  Unfortunately, though many
-viewers do make use of this feature, most reviews do not recieve votes
+viewers do make use of this feature, most reviews do not receive votes
 (see Figure 1 TODO pwais).  In this work, we study applying modern
 machine learning algorithms to textual review features in order to
-automatically predict if a review will recieve ``useful'' votes.
+automatically predict if a review will receive ``useful'' votes.
 
 An additional problem facing these networks is to spotlight quality
 content in emerging areas of the site.  For example, when a social
@@ -83,11 +83,6 @@ setting for our problem space and we present the experimental results
 as in \cite{JennLearnDiffDomains}. At the end, we conclude with some
 remarks about our experiments and future work section.
 
-
-We tell a story to motivate the problem. We mention Jenn's
-work~\cite{JennLearnDiffDomains} and the sentiment classification
-work~\cite{PangSentimentClassification}.
-
 \section{Feature Extraction and Labeling the Data}
 We have divided the features into several categories.
 \subsection{Features}
@@ -100,7 +95,7 @@ number of URLs.
 
 We obtain many different sets of words divided with respect to their
 contextual meanings i.e. time, space, comparison, contrast, summary,
-suggestion, emphasis, etc. and we count the number of occurences of
+suggestion, emphasis, etc. and we count the number of occurrences of
 these in a review. For instance, comparison words are
 \emph{similarly, likewise,} etc., contrast words are \emph{but,
   however, nevertheless, in spite of,} etc. Moreover, we have some
@@ -124,7 +119,7 @@ review. We include the price of the product from the Amazon data set and
 discretize it so that we have a corresponding measurement of price
 range as we have in Yelp reviews (an integer between 1-4). 
 
-\subsection{Deciding on the Labelling}
+\subsection{Deciding on the Labeling}
 In the early experiments, we used $50^{th}$ percentile cutoff to label the
 review as useful. In other words, if the positive votes for a review is above
 $50^{th}$ percentile, we labeled it as useful. However, this approach affected our classification
@@ -215,9 +210,8 @@ chosen weak classifier (which is usually the number of words in the
 text with a certain threshold) has $\epsilon_t \approx 0.34$. However,
 latter classifiers have very high error rates, $\epsilon_t \approx
 0.4999999$ which can be considered almost random decision in
-practice. Figure \ref{feature_distributions} can be a guide to gain
-intuition on the quality of the weak classifiers. As we look at the
-feature distributions, we observe they are either very sparse or
+practice. As we look at the histograms of feature distributions over
+the labeled samples, we observe they are either very sparse or
 cannot separate two classes. In other words, as we extract a weak
 classifier from a feature, the threshold cannot classify significantly
 better than random decision due to this overlap. Keeping this
@@ -230,12 +224,6 @@ where $\forall t$, $\gamma_t \geq \gamma $ and $\gamma > 0$ and in our
 experiments we witness $\gamma$ to be arbitrarily small which explains
 the poor performance of the strong classifier.
 
-\begin{figure*}[ht]
-  \centering
-  \includegraphics[scale=.5]{features_distributions}
-  \caption{Histograms for features where blue and red stand for two classes}
-  \label{fig:dist}
-\end{figure*}
 
 Looking at the performances of Adaboost algorithm and linear SVM in
 dense and sparse configurations, we observe similar accuracies for
@@ -262,7 +250,7 @@ CM_{linearSVM} = \left(
 \end{matrix}
 \right)
 \end{equation}
-As we investigate further by changing the labelling method
+As we investigate further by changing the labeling method
 for the reviews, we see the effect of class distributions directly on
 the confusion matrices. An interesting perspective to compare the
 behavior of Adaboost and linear SVM might be looking at the specific
@@ -272,22 +260,6 @@ better condition than linear SVMs in this aspect. However, we believe
 we need to do a literature survey to have a better method and a more
 rigorous explanation
 for this comparison, so we leave this task as a future work.
-
-\section{Questions}
-
-Guys, so it looks like the Amazon and Yelp data sets have almost identical distributions.
-
-This figure should go to domain adaptation section for the explanation
-of distance measure \_ ertan
-
-\begin{figure*}[h]
-	\centering
-	\includegraphics[width=0.5\linewidth]{adaptation_unlabeled_features}
-	\caption{Feature distributions for the unlabeled data sets $U_{\textrm{A}}$ and $U_{\textrm{Y}}$.  
-	Blue indicates Amazon data feature values and red indicates Yelp feature values.}
-\end{figure*}
-
-I tried running the SVM again on our data set and it got 50\% accuracy... perhaps when a data set is not separable at all an SVM picks hyperplanes that just split the data in half... in any case, I think our distance $\zeta(U_{\textrm{A}}, U_{\textrm{Y}})$ should actually be more like 0?
 
 \section{Domain Adaptation}
 \label{sec:background}
@@ -326,6 +298,13 @@ from the target domain.
   f(\alpha)=\sqrt{\frac{C}{m}\left(\frac{\alpha^2}{\beta} + \frac{(1-\alpha)^2}{1-\beta}\right)}+(1-\alpha)\zeta(U_S,U_T)
 \end{equation}
 
+\begin{figure*}[h]
+	\centering
+	\includegraphics[width=0.75\linewidth]{adaptation_unlabeled_features}
+	\caption{Feature distributions for the unlabeled data sets $U_{\textrm{A}}$ and $U_{\textrm{Y}}$.  
+	Blue indicates Amazon data feature values and red indicates Yelp feature values.}
+\end{figure*}
+
 \subsection{Experiments}
 \label{sec:domain-adaptation}
 
@@ -333,17 +312,17 @@ In this set of experiments we use Support Vector Machines to learn
 from a combination of both domains; Yelp is considered to be the
 \emph{target domain} and Amazon the \emph{source domain}.
 
-We estimate the distance between the distributions, $\zeta$ , using
-the metod explained in \ref{sec:estimating-distance}. 
+We estimate the divergence $\zeta(U_S,U_T)$ as described in the
+previous section combining 15,000 examples from each domain.
 
 We performed two sets of experiments. First, we fix the number of
-examples from the source domain costant $m_s=2500$, and we vary the
+examples from the source domain constant $m_s=2500$, and we vary the
 examples from the target distribution $m_t \in \{250, 500, 1000,
 2000\}$. Then, we fix $m_t=2500$ constant and we vary $m_s$ in the
 same way. 
 
 Figure~\ref{fig:domain-adaptation} shows the results of both
-experiments. The left colum corresponds to the first experiments where
+experiments. The left column corresponds to the first experiments where
 $m_S$ is fixed; the right column to the experiments where $m_T$ is
 fixed. Top row shows a theoretical bound on the error given by
 Equation~(\ref{eq:alphaerror}) and the bottom row shows experimental
@@ -372,7 +351,9 @@ experiment instances. As stated in Section \ref{sec:single_domain} one
 of the obvious differences is the quality of the confusion matrices. We would like to
 investigate the incorrectly classified examples for each algorithm and
 come up with an explanation related to what it is minimizing for
-classification.  
+classification.  Furthermore, we would like to give a more rigorous explanation on why
+Naive Bayes classifier has a dominating accuracy in sparse feature
+encoding by comparing the objective functions of our algorithms.
 
 For domain adaptation part, we would like to see how well the classifier
 performs when the distance between the target and source distribution
@@ -388,7 +369,20 @@ between the two distributions of each configuration.
 
 \section{Conclusion}
 \label{sec:conclusion}
-
+We have used different machine learning algorithms to determine the
+quality of a review and we have tried to apply the notion of domain
+adaptation to our problem space. One of the most important remarks is
+the effect of noise in the data and choice of the right features for
+classification. We believe feature extraction per se can be the most
+significant factor for the accuracy of the classification and
+unfortunately we have pursued this part of research rather intuitively
+than doing a thorough literature survey. On the other hand, this has
+not affected the goal of this project since we have aimed to look at
+the nature of the algorithms and domain adaptation settings. However,
+we believe its impact on the domain adaptation experiments is not
+negligible. Furthermore, we observe that some of the assumptions in
+the theoretical results can actually play important roles on
+determining the error rates in real life classification problems.
 
 \bibliographystyle{IEEEtran}
 \bibliography{bib,IEEEabrv}
