@@ -16,7 +16,7 @@ matplotlib.use('TkAgg')      # backend
 import matplotlib.pyplot as pyplot
 import simplejson
 
-def plot_err(ms, mt, zeta, jsonfile):
+def plot_err(ms, mt, jsonfile):
     data = simplejson.loads(open(jsonfile).read())
     X = [0.05*x for x in range(20)]
     Y = []
@@ -25,7 +25,7 @@ def plot_err(ms, mt, zeta, jsonfile):
         key = str((ms, mt, alpha))
         acc = data[key]/100
         err = 1 - acc
-        Y.append(acc)
+        Y.append(err)
     pyplot.plot(X, Y)
     
 def plot_bound(ms, mt, zeta):
@@ -47,7 +47,7 @@ def plot_curve(curve, zeta, fix,):
             if curve == 'bound':
                 plot_bound(ms, mt, zeta)
             else:               # assume jason file
-                plot_err(ms, mt, zeta, curve)
+                plot_err(ms, mt, curve)
 
     pyplot.show()
 
