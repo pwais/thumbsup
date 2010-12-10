@@ -19,7 +19,7 @@
 \newtheorem{definition}{Definition}
 \newtheorem{question}{Question}
 
-\title{Learning Review Classification from Different Domains}
+\title{Learning To Classify Review Usefulness}
 \author{Ertan Dogrultan, Cesar Romero, Paul Wais\\
 Computer Science Department \\
 University of California, Los Angeles\\
@@ -31,17 +31,15 @@ Los Angeles, California 90095\\
 \begin{document}
 \maketitle
 \begin{abstract}
-  In this project, we study the learning task of predicting
-  ``usefulness'' votes of product and business reviews.  We have
-  obtained 2 million Amazon reviews and 15,000 Yelp reviews annotated
-  with voting information.  We wish to predict whether a review will
-  achieve a high ranking on the scoreboard of reviews voted
-  ``useful''.  In particular, we consider a binary labeling task where
-  we assign a positive ``usefulness'' label to a review if its
-  positive vote count falls at or above the pth percentile of all vote
-  counts (and assign a negative label otherwise).  To predict these
-  labels, we have implemented about two dozen textual and contextual
-  features inspired by Pang et al. \cite{PangSentimentClassification}
+  In this work, we study the learning task of predicting if a product or 
+  business review will recieve ``useful'' votes.  We study a corpus of
+  2 million Amazon reviews and 15,000 Yelp reviews annotated
+  with voting information.  To predict ``usefulness'', we study over a dozen 
+  novel text and contextual features inspired by previous work on 
+  sentiment analysis.  Futhermore, we study the task of domain adaptation,
+  where we attempt to devise a classifier that performs well on Yelp data
+  when only small amount of Yelp but large amount of Amazon training data
+  is available.
 \end{abstract}
 
 \section{Introduction}
@@ -154,42 +152,42 @@ word, respectively.  They find that this score effectively differentiates
 postive and negative sentiment text across several domains.  We include
 this scoring mechanism as one of our features.
 
-\subsection{Product/Service Related Features} 
-This feature is somewhat different than the previous ones; it depends
-on the product as opposed to a particular review. We include the price
-of the product from the Amazon data set and discretize it so that we
-have a corresponding measurement of price range as we have in Yelp
-reviews (i.e. an integer between 1 (cheap) and 4 (expensive)).
+\subsection{Product/Service Related Features}
+The price of a product or business might impact the visibility of reviews
+since expensive products and businesses are relatively sparse.  We include
+as a feature the price of the product or business expressed as an integer 
+between 1 (cheap) and 4 (expensive).
 
-\subsection{Deciding on the Labeling}
-In the early experiments, we used $50^{th}$ percentile cutoff to label
-the review as useful. In other words, if the nuimber of positive votes
+\subsection{Defining Usefulness Labels}
+We experimented with several different ways of mapping raw useful vote
+counts to binary labels.  In early experiments, we computed a histogram
+of all vote counts and used a $50^{th}$ percentile cutoff to define binary
+labels. In other words, if the number of positive votes
 for a review is above the $50^{th}$ percentile, we labeled it as
-useful. This approach affected our classification accuracy negatively,
-and we decided to try to eliminate some noise from the data by pushing
-the thresholds to more extreme values. Currently, we label a review as
+useful. We observed that this label definition resulted in very low
+classification accuracy.  In an effort to elimininate weak examples of 
+each class from the training data, we redefined labels such that a review as
 useful if its positive count is in the $75^{th}$ percentile or above
-and not useful if they are in the $5^{th}$ percentile or below. We
-observe the reflection of this approach on the confusion matrices. We
-will discuss more about this in Section \ref{sec:single_domain}.
+and not useful if they are in the $5^{th}$ percentile or below.  We found that
+this label definition dramatically improved our accuracy.
 
 
 \section{Single Domain Experiments}
 \label{sec:single_domain}  
-We run the experiments using the open-source data mining software
-WEKA~\cite{weka}, and present the results for three algorithms:
-Support Vector Machines, Adaboost and Naive Bayes with two different
-feature encodings.
+In this section we discuss the results of running several experiments using 
+the open-source data mining framework WEKA~\cite{weka}.  We present the results 
+for three algorithms: Support Vector Machines, Adaboost and Naive Bayes with 
+two different feature encodings.
 
-In the first encoding, we have different sets of words as we described
-in Section~\ref{sec:features}. We compute the frequencies of those
-words and use each calculated frequency as a single feature. We refer to
-this encoding as \emph{dense}.
+In the first encoding, we each input vector consists of a list of the feature
+values described in Section~\ref{sec:features}. We refer to this encoding as 
+\emph{dense}.
 
-Our second feature encoding aims to generate more weak classifiers out
-of the sets of words. We assume every word from these sets is a
-feature, and we get the corresponding weak classifier by computing
-their frequencies. We refer to this encoding as \emph{sparse}. The
+Our second feature encoding aims to follow the work of Pang et al 
+\cite{PangSentimentClassification} and utilizes a higher-dimensional space. In 
+place of the word frequency features described in Section \ref{sec:features}, 
+we store the count of each specific word or ngram in distinct components of 
+the input vector.  We refer to this encoding as \emph{sparse}. The
 main motivation behind the sparse features is increasing the dimension
 for classification. This can be useful for SVMs and Adaboost
 algorithms.
@@ -230,31 +228,28 @@ Naive Bayes 		& $76.8091\%$ & $73.0346\%$ & $77.1733\%$ & $67.9567\%$\\
 \end{table}
 
 Tables~\ref{tab:dense} and~\ref{tab:sparse} show the results for this
-set of experiments. First, we want to focuson the performance
-improvement Naive Bayes shows when switching to sparse encoding. We
-said in the progress report that the main problem with this classifier
-is believed to be the lack of low entropy feature
-distributions~\cite{naivebayes}. We pointed out that the unrealistic
+set of experiments. First, we want to focus on the performance
+improvement Naive Bayes shows when switching to the sparse encoding. The main 
+problem with this classifier is believed to be the lack of low entropy feature
+distributions~\cite{naivebayes}. We believe that the unrealistic
 assumption of conditional independence between the features hurts the
-classification significantly; this is precisely the nature of the
-dense feature encoding. One thing to note is that there are overlaps
-amongst the word lists mentioned before; not only in the actual words
-but in meaning as well. Therefore, switching to sparse encoding
-removes dependecies between features that could normally reduce the
+accuracy significantly. Moreover, we note that there are overlaps
+among the word categories described in Section \ref{sec:features}; not only 
+in the actual words but in meanings as well. Therefore, switching to the sparse 
+encoding removes dependecies between features that could normally reduce the
 performance of Naive Bayes. The Tables show how the accuracy increases
 from $70\%$ to $76\%$ for Amazon and from $66\%$ to $77\%$ for Yelp.
 
-In many applications, Adaboost algorithm tends to have low training
-error, so we investigate the performance of Adaboost more closely. We
+In many applications, the Adaboost algorithm tends to have low training
+error, so we investigated the performance of Adaboost more closely. We
 look at our weak classifiers and the corresponding errors,
-$\epsilon_t$. At each step, the weak classifier, $h_t(x)$, having the
-minimum error on the weighted samples is chosen greedily. The first
-chosen weak classifier (which is usually the number of words in the
-text with a certain threshold) has $\epsilon_t \approx 0.34$. However,
-latter classifiers have very high error rates, $\epsilon_t \approx
-0.4999999$ which can be considered random decision in practice. As we
-looked at the histograms of feature distributions over the labeled
-samples, we observed that they were either very sparse (i.e. few
+$\epsilon_t$. At each step, the weak classifier $h_t(x)$ having the
+minimum error on the weighted samples is chosen greedily. The 
+weak classifier choosen at step $t=0$ (which is usually the number of words 
+in the text with a certain threshold) has $\epsilon_t \approx 0.34$. However,
+most other classifiers have very high error rates, with $\epsilon_t \approx
+0.4999999$. As we looked at the histograms of feature distributions over the 
+labeled samples, we observed that they were either very sparse (i.e. few
 buckets have reviews in them) or the histograms overlapped. As we
 extract a weak classifier that corresponds to a feature, the threshold
 cannot classify significantly better than random decision due to this
@@ -270,13 +265,12 @@ this explains the poor performance of the strong classifier.
 
 Looking at the performance of Adaboost and linear SVMs with dense and
 sparse encodings, we observe similar accuracies for both Amazon and
-Yelp data. We believe that the class distribution (the choice of
-percentile to label the sample as useful) has a significant effect on
-the accuracy. This conclusion originates from the observation of
-``bad'' confusion matrices ($CM$) for the classifiers. Indeed, as we
-look at the confusion matrices of both algorithms on the Amazon data
-set in Equation~\ref{eq:confusion}, we do not see the desired dominant
-diagonal.
+Yelp data. We believe that the class distribution of useful reviews has 
+a significant effect on the accuracy. This conclusion originates from 
+the observation of ``bad'' confusion matrices ($CM$) for the classifiers. 
+Indeed, as we look at the confusion matrices of both algorithms on the 
+Amazon data set in Equation~\ref{eq:confusion}, we do not see the desired 
+dominant diagonal.
 \begin{equation}
 \label{eq:confusion}
 CM_{Adaboost} = \left(
@@ -295,43 +289,37 @@ CM_{linearSVM} = \left(
 \end{equation}
 As we investigate further by changing the labeling for the reviews, we
 see its effect on class distributions directly in the confusion
-matrices. We could compare the behavior of Adaboost and linear SVM by
+matrices. We compare the behavior of Adaboost and linear SVM by
 looking at the specific examples represented in these confusion
-matrices instead of the training
-accuracy. Equation~(\ref{eq:confusion}) shows how Adaboost is
+matrices. Equation~(\ref{eq:confusion}) shows how Adaboost is
 performing better than linear SVMs in this aspect.
 
-\section{Domain Adaptation}
+\section{Adapting From Amazon to Yelp Reviews}
 \label{sec:background}
 
-We are interested in being able to classify reviews in general - not
-just from a specific source or category. This would allow for reviews
-to be classified automatically even on domains where the amount of
-labeled data is very limited. This problem has been studied recently
-as \emph{domain adaptation}~\cite{JennLearnDiffDomains}. In this
-problem, there is a source domain $S$ and a target domain $T$. The
-goal is to be able to classify reviews in $T$ when most of our data
-comes from $S$. To be able to estimate a bound on the error, two
-important concepts are taken into account: the divergence between
-unlabeled data in both domains and the combined empirical error.
+In this secton we study the task of training a classifier on an abudace of
+Amazon data (i.e. a source domain $S$) and a small amount of Yelp data (i.e 
+a target domain $T$) in order to predict the usefulness
+of Yelp reviews. We discuss results of following the procedure of Ben-David 
+et al \emph{domain adaptation}~\cite{JennLearnDiffDomains}.  To be able to 
+estimate a bound on the error, two important concepts are taken into account: 
+the divergence between unlabeled data in both domains and the $\alpha$ error,
+which expresses a weighted tradeoff between source and target training error.
+For the purpose of this experiment, we use a linear SVM as our classifier.
 
-In this setting, a classifier-induced divergence
-suffices~\cite{JennLearnDiffDomains}. It is obtained by training a
-linear classifier to learn to which domain a review belongs to. The
-error of this classifier is used to estimate the divergence we are
-interested in.
+In this setting, we calculate the divergence between two domains by
+training a classifier on ``unlabeled'' data. In particular, the error of 
+this classifier is used to estimate the domain divergence.
 
 Given the two domains we are interesting in learning a hypothesis $h$
 that minimizes an empirical error that combines both domains. This is
 precisely the $\alpha$-error defined as $\alpha \hat
 \epsilon_T(h)+(1-\alpha)\hat \epsilon_S(h)$, where $\hat \epsilon_S$
-and $\hat \epsilon_T$ are the source and target errors
-respectively~\cite{JennLearnDiffDomains}.
-
-With this ingredients, an approximation to the bound is given by
-Equation~(\ref{eq:alphaerror}). Where $\zeta(U_S,U_T)$ is the
-empirical divergence and $\beta$ is the fraction of examples that come
-from the target domain.
+and $\hat \epsilon_T$ are the source and target errors,
+respectively.  We express the target error bound as a function of alpha in 
+Equation~(\ref{eq:alphaerror}), where $\zeta(U_S,U_T)$ is the
+empirical divergence and $\beta$ is the fraction of training from the target
+domain.
 
 \begin{equation}
   \label{eq:alphaerror}
@@ -349,16 +337,12 @@ from the target domain.
 \subsection{Experiments}
 \label{sec:domain-adaptation}
 
-In this set of experiments we use Support Vector Machines to learn
-from a combination of both domains; Yelp is considered to be the
-\emph{target domain} and Amazon the \emph{source domain}.
-
 We estimate the divergence $\zeta(U_S,U_T)$ as described in the
-previous section combining 15,000 examples from each
+previous section combining 10,000 examples from each
 domain. Figure~\ref{fig:dist} shows the feature distributions for both
-domains. The big overlap suggest that the domains are very similar,
-which would imply low divergence. However, our classifier-induced
-divergence was very close to one in practice.
+domains. The large overlap for each feature suggests that the domains are 
+very similar, which would imply a low divergence. However, our 
+classifier-induced divergence was very close to one in practice.
 
 We performed two sets of experiments. First, we fix the number of
 examples from the source domain constant $m_s=2500$, and we vary the
@@ -387,7 +371,7 @@ results.
   \label{fig:domain-adaptation}
 \end{figure}
 
-\section{Future work}
+\section{Future work and Conclusion}
 \label{sec:future-work}
 
 Looking at the performances of the algorithms, we observe Adaboost and
@@ -413,25 +397,10 @@ $C_T=$\{Restaurants\}. For each combination in $C_S\times C_T$ we
 train and test a different linear classifier to estimate the distance
 between the two distributions of each configuration.
 
-\section{Conclusion}
-\label{sec:conclusion}
-
-We have used different machine learning algorithms to determine the
-quality of a review using real data from Amazon and Yelp. We have
-approached this task as a domain adaptation problem. In particular, we
-tried to use a large set of Amazon reviews to predict the quality of
-Yelp reviews. One of the most important remarks is the effect of noise
-in the data and choice of the right features for classification. We
-believe feature extraction per se can be the most significant factor
-for the accuracy of the classification. Unfortunately, we have
-approached this problem using just intuition rather than a data driven
-model or following previous work.  We believe its impact on the domain
-adaptation experiments is not negligible. On the other hand, this has
-not affected the goal of this project; we have aimed to look at the
-nature of the algorithms and the domain adaptation
-problem. However, we believe its impact on the domain adaptation
-experiments is not negligible. 
-
+The relatively low accuracy of our classifiers suggests that textual features
+may not be strong predictors of review usefulness.  Since votes are sparse,
+social factors such as the friend nework may dominate which reviews recieve
+votes.  
 
 \bibliographystyle{IEEEtran}
 \bibliography{bib,IEEEabrv}
