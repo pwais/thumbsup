@@ -206,31 +206,31 @@ minimum error on the weighted samples is chosen greedily. The first
 chosen weak classifier (which is usually the number of words in the
 text with a certain threshold) has $\epsilon_t \approx 0.34$. However,
 latter classifiers have very high error rates, $\epsilon_t \approx
-0.4999999$ which can be considered almost random decision in
-practice. As we look at the histograms of feature distributions over
-the labeled samples, we observe they are either very sparse or
-cannot separate two classes. In other words, as we extract a weak
-classifier from a feature, the threshold cannot classify significantly
-better than random decision due to this overlap. Keeping this
-empirical observation in mind, as we revisit the upper bound for the
-training error for Adaboost \cite{adaboost}\cite{adaboost2}, we have
+0.4999999$ which can be considered random decision in practice. As we
+looked at the histograms of feature distributions over the labeled
+samples, we observed that they were either very sparse (i.e. few
+buckets have reviews in them) or the histograms overlapped. As we
+extract a weak classifier that corresponds to a feature, the threshold
+cannot classify significantly better than random decision due to this
+overlap. Keeping this empirical observation in mind, we revisit the
+upper bound for the training error for
+Adaboost~\cite{adaboost,adaboost2}. We have
 \[
 err(H) \leq e^{-2\gamma^2 T}
 \]
-where $\forall t$, $\gamma_t \geq \gamma $ and $\gamma > 0$ and in our
-experiments we witness $\gamma$ to be arbitrarily small which explains
-the poor performance of the strong classifier.
+where $\forall t$, $\gamma_t \geq \gamma $ and $\gamma > 0$. In our
+experiments, we witness an arbitrarily small $\gamma$. We believe that
+this explains the poor performance of the strong classifier.
 
-
-Looking at the performances of Adaboost algorithm and linear SVM in
-dense and sparse configurations, we observe similar accuracies for
-both Amazon and Yelp data set. One of the main reasons is the class
-distribution (the choice of percentile to label the sample as useful)
-has a significant effect on the accuracy. This conclusion originates
-from the observation of ``bad'' confusion matrices ($CM$) for the
-classifiers. For instance as we look at the confusion matrices of both
-algorithms in \ref{eq:confusion} (Amazon data set), we do not see the
-dominant diagonal picture.
+Looking at the performance of Adaboost and linear SVMs with dense and
+sparse encodings, we observe similar accuracies for both Amazon and
+Yelp data. We believe that the class distribution (the choice of
+percentile to label the sample as useful) has a significant effect on
+the accuracy. This conclusion originates from the observation of
+``bad'' confusion matrices ($CM$) for the classifiers. Indeed, as we
+look at the confusion matrices of both algorithms on the Amazon data
+set in Equation~\ref{eq:confusion}, we do not see the desired dominant
+diagonal.
 \begin{equation}
 \label{eq:confusion}
 CM_{Adaboost} = \left(
