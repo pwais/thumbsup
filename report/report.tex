@@ -73,15 +73,32 @@ user votes to spotlight new content that viewers will find useful.  In
 this work, we study how to fulfill this task using a domain adaptation
 technique \cite{JennLearnDiffDomains}.
 
-The remainder of this paper proceeds as follows; first we explain how
-the features are extracted and how we label the training data
-including the assumptions we make. After that, we present the
-experimental results for Amazon and Yelp domains separately and make
-comments on the performance of the popular algorithms we choose with
-the support of course material. Then, we explain the domain adaptation
-setting for our problem space and we present the experimental results
-as in \cite{JennLearnDiffDomains}. At the end, we conclude with some
-remarks about our experiments and future work section.
+The remainder of this paper proceeds as follows: first we describe the novel 
+features we use and contrast them with related work in sentiment 
+classification.  Next, we present the results of applying traditional 
+supervised learning algorithms to learn to predict the ``usefullness'' of 
+reviews from Amazon and Yelp.  Next, we investigate the problem of domain 
+adaptation by training a linear SVM on a preponderance of Amazon review data 
+and a small sample data.  Despite spending considerable effort on feature 
+engineering and classifier tuning, we observe high error rates for both of the 
+aforementioned experiments.  We find that the problem of predicting usefulness 
+is harder than the related problem of sentiment classification.  We conclude 
+with suggestions for additional features and experiments that may result in a more accurate model.
+
+\section{Setting and Related Work}
+Our approach builds on related work in sentiment classification that seeks to use 
+review text to predict the ratings of users' reviews.  Pang et al \cite{PangSentimentClassification}
+apply several supervised machine learning algorithms to product reviews and observe that 
+standard, untuned algorithms are capable of approximately $85\%$ accuracy.  They hypothesize that
+a small set of words decide sentiment and encode input text in attemp to learn these words. 
+Their model represents reviews as sparse vectors in a high-dimensional space where the $i$th component 
+of a vector $\vec{x}$ indciates the count or presence for a single unigram or bigram.  They observe
+that SVMs peform slightly better when trained on vectors of word presence rather than counts.
+
+Dodds et al \cite{DoddsANEWPaper} have conducted a related study and build upon work in 
+pyscholinguistics towards building a ``hedonometer'' capable of predicting positive 
+and negative sentiment from unlabeled text.  Their work devises a simple model utilizing the 
+valence scores of words from the ANEW data set
 
 \section{Feature Extraction and Labeling the Data}
 We have divided the features into several categories.

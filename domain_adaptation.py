@@ -88,12 +88,13 @@ def output_weight_file(alpha, ms, mt, fpath=None):
     '''produce a file with ms copies of (1-alpha) and mt copies of
     alpha. One weight per line. The output file is
     msS+mtT-alpha.wgt'''
+    beta = float(mt) / (ms + mt)
     if fpath is None:
         fpath = "%sS+%sT-%s.wgt" % (ms, mt, alpha)
     outfile = open(fpath, 'w')
-    source_weight = '%s\n' % (1-alpha)
+    source_weight = '%s\n' % ((1-alpha)/(1-beta))
     print >>outfile, source_weight*ms, # ',' to avoid extra newline
-    target_weight = '%s\n' % alpha
+    target_weight = '%s\n' % (alpha/beta)
     print >>outfile, target_weight*mt
     outfile.close()
 
