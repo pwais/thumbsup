@@ -32,11 +32,11 @@ Los Angeles, California 90095\\
 \maketitle
 \begin{abstract}
   In this work, we study the learning task of predicting if a product or 
-  business review will recieve ``useful'' votes.  We study a corpus of
+  business review will receive ``useful'' votes.  We study a corpus of
   2 million Amazon reviews and 15,000 Yelp reviews annotated
   with voting information.  To predict ``usefulness'', we study over a dozen 
   novel text and contextual features inspired by previous work on 
-  sentiment analysis.  Futhermore, we study the task of domain adaptation,
+  sentiment analysis.  Furthermore, we study the task of domain adaptation,
   where we attempt to devise a classifier that performs well on Yelp data
   when only small amount of Yelp but large amount of Amazon training data
   is available.
@@ -74,7 +74,7 @@ technique \cite{JennLearnDiffDomains}.
 The remainder of this paper proceeds as follows: first we describe the novel 
 features we use and contrast them with related work in sentiment 
 classification.  Next, we present the results of applying traditional 
-supervised learning algorithms to learn to predict the ``usefullness'' of 
+supervised learning algorithms to learn to predict the ``usefulness'' of 
 reviews from Amazon and Yelp.  Next, we investigate the problem of domain 
 adaptation by training a linear SVM on a preponderance of Amazon review data 
 and a small sample data.  Despite spending considerable effort on feature 
@@ -100,7 +100,7 @@ use review text to predict the ratings of users' reviews.  Pang et al
 algorithms to movie reviews, hypothesizing that algorithms will learn to
 identify a small set of words that indicate sentiment.  Their model represents 
 reviews as sparse vectors in a high-dimensional space where the $i$th component 
-of an input vector $\vec{x}$ indciates the count or presence for a single 
+of an input vector $\vec{x}$ indicates the count or presence for a single 
 unigram or bigram.  Their experiments show that standard, un-tuned machine 
 learning algorithms are capable of separating classes of positive- and 
 negative-rated reviews with over $80\%$ accuracy.  
@@ -123,7 +123,7 @@ Furthermore, we measure the frequencies of several different categories of
 words and n-grams.  In particular, these categories include sets of words that
 are indicative of time, space, comparisons, contrasts, summarizations,
 suggestions, and emphasis.  For instance, comparison words are \emph{similarly,
-likewise,} etc., and contrast ngrams are \emph{but, however, nevertheless, 
+likewise,} etc., and contrast n-grams are \emph{but, however, nevertheless, 
 in spite of,} etc. We also measure frequencies of SAT and GRE words.  We 
 normalize each count by dividing by the review's word count.
 
@@ -136,7 +136,7 @@ counts by review word count.
 
 \subsection{Emphatic Word Score}
 Emphatic reviews are often more useful than neutral opinions.  We define a 
-textual feature that measures sentiment strength independent of postivity
+textual feature that measures sentiment strength independent of positivity
 using empirical sentiment measures from The Study on Affective Norms from 
 English Words (ANEW)\cite{BradleyANEW}.\footnote{In particular, we used this PDF 
 available freely online \url{http://dionysus.psych.wisc.edu/methods/Stim/ANEW/ANEW.pdf}.}
@@ -144,13 +144,13 @@ Dodds et al \cite{DoddsANEWPaper} propose an effective sentiment scoring model
 that interprets the ANEW study's ``valence'' score (a real number in $[1,10]$) 
 as a measure of sentiment.  (For example, in the ANEW study, ``triumph'' has a 
 valence score of $8.87$, while ``hostage'' has a score of $2.20$).  Dodds et al 
-propse scoring text using the weighted sum 
+propose scoring text using the weighted sum 
 \[
     \frac{\sum^n_{i=0} v_i f_i}{\sum^n_{i=0} f_i}
 \]
 where $v_i$ is the valence and $f_i$ is the frequency of the $i$th distinct
 word, respectively.  They find that this score effectively differentiates
-postive and negative sentiment text across several domains.  We include
+positive and negative sentiment text across several domains.  We include
 this scoring mechanism as one of our features.
 
 \subsection{Product/Service Related Features}
@@ -166,7 +166,7 @@ of all vote counts and used a $50^{th}$ percentile cutoff to define binary
 labels. In other words, if the number of positive votes
 for a review is above the $50^{th}$ percentile, we labeled it as
 useful. We observed that this label definition resulted in very low
-classification accuracy.  In an effort to elimininate weak examples of 
+classification accuracy.  In an effort to eliminate weak examples of 
 each class from the training data, we redefined labels such that a review as
 useful if its positive count is in the $75^{th}$ percentile or above
 and not useful if they are in the $5^{th}$ percentile or below.  We found that
@@ -187,7 +187,7 @@ values described in Section~\ref{sec:features}. We refer to this encoding as
 Our second feature encoding aims to follow the work of Pang et al 
 \cite{PangSentimentClassification} and utilizes a higher-dimensional space. In 
 place of the word frequency features described in Section \ref{sec:features}, 
-we store the count of each specific word or ngram in distinct components of 
+we store the count of each specific word or n-gram in distinct components of 
 the input vector.  We refer to this encoding as \emph{sparse}. The
 main motivation behind the sparse features is increasing the dimension
 for classification. This can be useful for SVMs and Adaboost
@@ -237,7 +237,7 @@ assumption of conditional independence between the features hurts the
 accuracy significantly. Moreover, we note that there are overlaps
 among the word categories described in Section \ref{sec:features}; not only 
 in the actual words but in meanings as well. Therefore, switching to the sparse 
-encoding removes dependecies between features that could normally reduce the
+encoding removes dependencies between features that could normally reduce the
 performance of Naive Bayes. The Tables show how the accuracy increases
 from $70\%$ to $76\%$ for Amazon and from $66\%$ to $77\%$ for Yelp.
 
@@ -246,7 +246,7 @@ error, so we investigated the performance of Adaboost more closely. We
 look at our weak classifiers and the corresponding errors,
 $\epsilon_t$. At each step, the weak classifier $h_t(x)$ having the
 minimum error on the weighted samples is chosen greedily. The 
-weak classifier choosen at step $t=0$ (which is usually the number of words 
+weak classifier chosen at step $t=0$ (which is usually the number of words 
 in the text with a certain threshold) has $\epsilon_t \approx 0.34$. However,
 most other classifiers have very high error rates, with $\epsilon_t \approx
 0.4999999$. As we looked at the histograms of feature distributions over the 
@@ -298,7 +298,7 @@ performing better than linear SVMs in this aspect.
 \section{Adapting From Amazon to Yelp Reviews}
 \label{sec:background}
 
-In this secton we study the task of training a classifier on an abudace of
+In this section we study the task of training a classifier on an abundance of
 Amazon data (i.e. a source domain $S$) and a small amount of Yelp data (i.e 
 a target domain $T$) in order to predict the usefulness
 of Yelp reviews. We discuss results of following the procedure of Ben-David 
@@ -400,7 +400,7 @@ between the two distributions of each configuration.
 
 The relatively low accuracy of our classifiers suggests that textual features
 may not be strong predictors of review usefulness.  Since votes are sparse,
-social factors such as the friend nework may dominate which reviews recieve
+social factors such as the friend network may dominate which reviews receive
 votes.  
 
 \small
