@@ -58,10 +58,10 @@ spotlight the most relevant of these reviews in order to keep viewers
 engaged.  In order to surface the best content, many review-based
 social networks employ a user voting mechanism that enables viewers to
 anonymously vote a review as ``useful.''  Unfortunately, though many
-viewers do make use of this feature, most reviews do not recieve votes
+viewers do make use of this feature, most reviews do not receive votes
 (see Figure 1 TODO pwais).  In this work, we study applying modern
 machine learning algorithms to textual review features in order to
-automatically predict if a review will recieve ``useful'' votes.
+automatically predict if a review will receive ``useful'' votes.
 
 An additional problem facing these networks is to spotlight quality
 content in emerging areas of the site.  For example, when a social
@@ -100,7 +100,7 @@ number of URLs.
 
 We obtain many different sets of words divided with respect to their
 contextual meanings i.e. time, space, comparison, contrast, summary,
-suggestion, emphasis, etc. and we count the number of occurences of
+suggestion, emphasis, etc. and we count the number of occurrences of
 these in a review. For instance, comparison words are
 \emph{similarly, likewise,} etc., contrast words are \emph{but,
   however, nevertheless, in spite of,} etc. Moreover, we have some
@@ -124,7 +124,7 @@ review. We include the price of the product from the Amazon data set and
 discretize it so that we have a corresponding measurement of price
 range as we have in Yelp reviews (an integer between 1-4). 
 
-\subsection{Deciding on the Labelling}
+\subsection{Deciding on the Labeling}
 In the early experiments, we used $50^{th}$ percentile cutoff to label the
 review as useful. In other words, if the positive votes for a review is above
 $50^{th}$ percentile, we labeled it as useful. However, this approach affected our classification
@@ -262,7 +262,7 @@ CM_{linearSVM} = \left(
 \end{matrix}
 \right)
 \end{equation}
-As we investigate further by changing the labelling method
+As we investigate further by changing the labeling method
 for the reviews, we see the effect of class distributions directly on
 the confusion matrices. An interesting perspective to compare the
 behavior of Adaboost and linear SVM might be looking at the specific
@@ -301,7 +301,7 @@ and a target domain $T$. The goal is to be able to classify reviews in
 $T$ when most of our data comes from $S$. 
 
 Include the fancy Theorem here that will be used to predict the error
-of the calssifiers in the domain adaptation setting.
+of the classifiers in the domain adaptation setting.
 
 
 \subsection{$\alpha$-error}
@@ -336,13 +336,13 @@ We estimate the distance between the distributions, $\zeta$ , using
 the metod explained in \ref{sec:estimating-distance}. 
 
 We performed two sets of experiments. First, we fix the number of
-examples from the source domain costant $m_s=2500$, and we vary the
+examples from the source domain constant $m_s=2500$, and we vary the
 examples from the target distribution $m_t \in \{250, 500, 1000,
 2000\}$. Then, we fix $m_t=2500$ constant and we vary $m_s$ in the
 same way. 
 
 Figure~\ref{fig:domain-adaptation} shows the results of both
-experiments. The left colum corresponds to the first experiments where
+experiments. The left column corresponds to the first experiments where
 $m_S$ is fixed; the right column to the experiments where $m_T$ is
 fixed. Top row shows a theoretical bound on the error given by
 Equation~(\ref{eq:alphaerror}) and the bottom row shows experimental
@@ -393,7 +393,7 @@ In this project, we have used the most popular machine learning
 algorithms to determine the quality of a review and we have tried to
 apply the notion of domain adaptation to our problem space. One of the
 most important remarks is the effect of noise in the data and choice
-of the right features for classificaton. We believe feature extraction
+of the right features for classification. We believe feature extraction
 per se can be the most significant factor for the accuracy of the classification and unfortunately we have pursued this part of research rather
 intuitively than doing a thorough literature survey. On the other
 hand, this has not affected the goal of this project since we have
