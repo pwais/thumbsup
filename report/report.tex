@@ -12,7 +12,7 @@
 \usepackage{amssymb}
 % \usepackage{natbib}
 \usepackage{graphicx}
-\usepackage{subfigure}
+\usepackage{subfigure,fullpage}
 
 \newtheorem{thm}{Theorem}
 \newtheorem{lemma}{Lemma}
@@ -111,6 +111,7 @@ indicate strong argument. In the next section, we briefly describe and justify
 our chosen features.
 
 \section{Feature Extraction and Defining Labels}
+\label{sec:features}
 
 \subsection{Word Frequencies and Counts}
 In an attempt to measure user effort, we measure as features the number of 
@@ -328,7 +329,7 @@ domain.
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.75\linewidth]{adaptation_unlabeled_features}
+	\includegraphics[width=0.65\linewidth]{adaptation_unlabeled_features}
 	\caption{Feature distributions for the unlabeled data sets $U_{\textrm{A}}$ and $U_{\textrm{Y}}$.  
 	Blue indicates Amazon data feature values and red indicates Yelp feature values.}
       \label{fig:dist}
@@ -357,7 +358,7 @@ fixed. Top row shows a theoretical bound on the error given by
 Equation~(\ref{eq:alphaerror}) and the bottom row shows experimental
 results.
 
-\begin{figure}
+\begin{figure}[ht]
   \centering
   \subfigure[$\zeta(U_S, U_T)=1, m_S=2500$]
   {\includegraphics[scale=.3]{adaptation_bound_1_S}}
@@ -402,6 +403,7 @@ may not be strong predictors of review usefulness.  Since votes are sparse,
 social factors such as the friend nework may dominate which reviews recieve
 votes.  
 
+\small
 \bibliographystyle{IEEEtran}
 \bibliography{bib,IEEEabrv}
 
