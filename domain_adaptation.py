@@ -53,6 +53,7 @@ def plot_curve(curve, zeta, fix):
             else:               # assume jason file
                 plot_err(ms, mt, curve)
     pyplot.legend()
+    pyplot.axis([0,1,0,1])
     pyplot.show()
 
 def bound(alpha, beta, m, zeta=1):
