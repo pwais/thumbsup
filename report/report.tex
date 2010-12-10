@@ -83,11 +83,6 @@ setting for our problem space and we present the experimental results
 as in \cite{JennLearnDiffDomains}. At the end, we conclude with some
 remarks about our experiments and future work section.
 
-
-We tell a story to motivate the problem. We mention Jenn's
-work~\cite{JennLearnDiffDomains} and the sentiment classification
-work~\cite{PangSentimentClassification}.
-
 \section{Feature Extraction and Labeling the Data}
 We have divided the features into several categories.
 \subsection{Features}
@@ -215,9 +210,8 @@ chosen weak classifier (which is usually the number of words in the
 text with a certain threshold) has $\epsilon_t \approx 0.34$. However,
 latter classifiers have very high error rates, $\epsilon_t \approx
 0.4999999$ which can be considered almost random decision in
-practice. Figure \ref{feature_distributions} can be a guide to gain
-intuition on the quality of the weak classifiers. As we look at the
-feature distributions, we observe they are either very sparse or
+practice. As we look at the histograms of feature distributions over
+the labeled samples, we observe they are either very sparse or
 cannot separate two classes. In other words, as we extract a weak
 classifier from a feature, the threshold cannot classify significantly
 better than random decision due to this overlap. Keeping this
@@ -230,12 +224,6 @@ where $\forall t$, $\gamma_t \geq \gamma $ and $\gamma > 0$ and in our
 experiments we witness $\gamma$ to be arbitrarily small which explains
 the poor performance of the strong classifier.
 
-\begin{figure*}[ht]
-  \centering
-  \includegraphics[scale=.5]{features_distributions}
-  \caption{Histograms for features where blue and red stand for two classes}
-  \label{fig:dist}
-\end{figure*}
 
 Looking at the performances of Adaboost algorithm and linear SVM in
 dense and sparse configurations, we observe similar accuracies for
@@ -273,22 +261,6 @@ we need to do a literature survey to have a better method and a more
 rigorous explanation
 for this comparison, so we leave this task as a future work.
 
-\section{Questions}
-
-Guys, so it looks like the Amazon and Yelp data sets have almost identical distributions.
-
-This figure should go to domain adaptation section for the explanation
-of distance measure \_ ertan
-
-\begin{figure*}[h]
-	\centering
-	\includegraphics[width=0.5\linewidth]{adaptation_unlabeled_features}
-	\caption{Feature distributions for the unlabeled data sets $U_{\textrm{A}}$ and $U_{\textrm{Y}}$.  
-	Blue indicates Amazon data feature values and red indicates Yelp feature values.}
-\end{figure*}
-
-I tried running the SVM again on our data set and it got 50\% accuracy... perhaps when a data set is not separable at all an SVM picks hyperplanes that just split the data in half... in any case, I think our distance $\zeta(U_{\textrm{A}}, U_{\textrm{Y}})$ should actually be more like 0?
-
 \section{Domain Adaptation}
 \label{sec:background}
 
@@ -324,6 +296,13 @@ We train a linear classifier to learn to which domain a review
 belongs. The error of this classifier is used as an estimate of the
 distance between the distributions.
 
+
+\begin{figure*}[h]
+	\centering
+	\includegraphics[width=0.75\linewidth]{adaptation_unlabeled_features}
+	\caption{Feature distributions for the unlabeled data sets $U_{\textrm{A}}$ and $U_{\textrm{Y}}$.  
+	Blue indicates Amazon data feature values and red indicates Yelp feature values.}
+\end{figure*}
 
 \subsection{Experiments}
 \label{sec:domain-adaptation}
