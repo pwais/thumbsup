@@ -264,38 +264,39 @@ for this comparison, so we leave this task as a future work.
 \section{Domain Adaptation}
 \label{sec:background}
 
-\emph{Here, we explain what domain adaptation is and its important
-prameters.}
 We are interested in being able to classify reviews in general - not
-just from a specific source or category. A natural problem to consider
-is Domain Adaptation. In this setting, there is a source domain $S$
-and a target domain $T$. The goal is to be able to classify reviews in
-$T$ when most of our data comes from $S$. 
+just from a specific source or category. This would allow for reviews
+to be classified automatically even on domains where the amount of
+labeled data is very limited. This problem has been studied recently
+as \emph{domain adaptation}~\cite{JennLearnDiffDomains}. In this
+problem, there is a source domain $S$ and a target domain $T$. The
+goal is to be able to classify reviews in $T$ when most of our data
+comes from $S$. To be able to estimate a bound on the error, two
+important concepts are taken into account: the divergence between
+unlabeled data in both domains and the combined empirical error.
 
-Include the fancy Theorem here that will be used to predict the error
-of the classifiers in the domain adaptation setting.
+In this setting, a classifier-induced divergence
+suffices~\cite{JennLearnDiffDomains}. It is obtained by training a
+linear classifier to learn to which domain a review belongs to. The
+error of this classifier is used to estimate the divergence we are
+interested in.
 
+Given the two domains we are interesting in learning a hypothesis $h$
+that minimizes an empirical error that combines both domains. This is
+precisely the $\alpha$-error defined as $\alpha \hat
+\epsilon_T(h)+(1-\alpha)\hat \epsilon_S(h)$, where $\hat \epsilon_S$
+and $\hat \epsilon_T$ are the source and target errors
+respectively~\cite{JennLearnDiffDomains}.
 
-\subsection{$\alpha$-error}
-\label{sec:alpha-error}
-
-Explain the $\alpha$-error here.
-
-Equation~(\ref{eq:alphaerror}) is an approximation to the bound on the
-$\alpha$-error~\cite{JennLearnDiffDomains}. \emph{Explain the parameters here}
+With this ingredients, an approximation to the bound is given by
+Equation~(\ref{eq:alphaerror}). Where $\zeta(U_S,U_T)$ is the
+empirical divergence and $\beta$ is the fraction of examples that come
+from the target domain.
 
 \begin{equation}
   \label{eq:alphaerror}
   f(\alpha)=\sqrt{\frac{C}{m}\left(\frac{\alpha^2}{\beta} + \frac{(1-\alpha)^2}{1-\beta}\right)}+(1-\alpha)\zeta(U_S,U_T)
 \end{equation}
-
-\subsection{Estimating the distance}
-\label{sec:estimating-distance}
-
-We train a linear classifier to learn to which domain a review
-belongs. The error of this classifier is used as an estimate of the
-distance between the distributions.
-
 
 \begin{figure*}[h]
 	\centering
@@ -311,8 +312,8 @@ In this set of experiments we use Support Vector Machines to learn
 from a combination of both domains; Yelp is considered to be the
 \emph{target domain} and Amazon the \emph{source domain}.
 
-We estimate the distance between the distributions, $\zeta$ , using
-the metod explained in \ref{sec:estimating-distance}. 
+We estimate the divergence $\zeta(U_S,U_T)$ as described in the
+previous section combining 15,000 examples from each domain.
 
 We performed two sets of experiments. First, we fix the number of
 examples from the source domain constant $m_s=2500$, and we vary the
@@ -368,6 +369,7 @@ between the two distributions of each configuration.
 
 \section{Conclusion}
 \label{sec:conclusion}
+
 In this project, we have used the most popular machine learning
 algorithms to determine the quality of a review and we have tried to
 apply the notion of domain adaptation to our problem space. One of the
@@ -379,6 +381,22 @@ hand, this has not affected the goal of this project since we have
 aimed to look at the nature of the algorithms and domain adaptation
 settings. However, we believe its impact on the domain adaptation
 experiments is not negligible. 
+
+We have used different machine learning algorithms to determine the
+quality of a review using real data from Amazon and Yelp. We have
+approached this task as a domain adaptation problem. In particular, we
+tried to use a large set of Amazon reviews to predict the quality of
+Yelp reviews. One of the most important remarks is the effect of noise
+in the data and choice of the right features for classification. We
+believe feature extraction per se can be the most significant factor
+for the accuracy of the classification. Unfortunately, we have
+approached this problem using just intuition rather than a data driven
+model or following previous work.  We believe its impact on the domain
+adaptation experiments is not negligible. On the other hand, this has
+not affected the goal of this project; we have aimed to look at the
+nature of the algorithms and the domain adaptation
+problem. 
+
 
 \bibliographystyle{IEEEtran}
 \bibliography{bib,IEEEabrv}
