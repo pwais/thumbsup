@@ -371,7 +371,9 @@ experiment instances. As stated in Section \ref{sec:single_domain} one
 of the obvious differences is the quality of the confusion matrices. We would like to
 investigate the incorrectly classified examples for each algorithm and
 come up with an explanation related to what it is minimizing for
-classification.  
+classification.  Furthermore, we would like to give a more rigorous explanation on why
+Naive Bayes classifier has a dominating accuracy in sparse feature
+encoding by comparing the objective functions of our algorithms.
 
 For domain adaptation part, we would like to see how well the classifier
 performs when the distance between the target and source distribution
@@ -387,7 +389,20 @@ between the two distributions of each configuration.
 
 \section{Conclusion}
 \label{sec:conclusion}
-
+In this project, we have used the most popular machine learning
+algorithms to determine the quality of a review and we have tried to
+apply the notion of domain adaptation to our problem space. One of the
+most important remarks is the effect of noise in the data and choice
+of the right features for classificaton. We believe feature extraction
+per se can be the most significant factor for the accuracy of the classification and unfortunately we have pursued this part of research rather
+intuitively than doing a thorough literature survey. On the other
+hand, this has not affected the goal of this project since we have
+aimed to look at the nature of the algorithms and domain adaptation
+settings. However, we believe its impact on the domain adaptation
+experiments is not negligible. Furthermore, we observe that
+some of the assumptions in the theoretical results can actually play
+important roles on determining the error rates in real life
+classification problems.
 
 \bibliographystyle{IEEEtran}
 \bibliography{bib,IEEEabrv}
