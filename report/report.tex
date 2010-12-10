@@ -83,7 +83,8 @@ and a small sample data.  Despite spending considerable effort on feature
 engineering and classifier tuning, we observe high error rates for both of the 
 aforementioned experiments.  We find that the problem of predicting usefulness 
 is harder than the related problem of sentiment classification.  We conclude 
-with suggestions for additional features and experiments that may result in a more accurate model.
+with suggestions for additional features and experiments that may result in 
+a more accurate model.
 
 \begin{figure}[h]
     \label{fig:vote-histos}
@@ -94,20 +95,33 @@ with suggestions for additional features and experiments that may result in a mo
     Most reviews have zero votes.}
 \end{figure}
 
-\section{Setting and Related Work}
-Our approach builds on related work in sentiment classification that seeks to use 
-review text to predict the ratings of users' reviews.  Pang et al \cite{PangSentimentClassification}
-apply several supervised machine learning algorithms to product reviews and observe that 
-standard, untuned algorithms are capable of approximately $85\%$ accuracy.  They hypothesize that
-a small set of words decide sentiment and encode input text in attemp to learn these words. 
-Their model represents reviews as sparse vectors in a high-dimensional space where the $i$th component 
-of a vector $\vec{x}$ indciates the count or presence for a single unigram or bigram.  They observe
-that SVMs peform slightly better when trained on vectors of word presence rather than counts.
+\section{Related Work}
+Our approach builds on related work in sentiment classification that seeks to 
+use review text to predict the ratings of users' reviews.  Pang et al 
+\cite{PangSentimentClassification} apply several supervised machine learning 
+algorithms to movie reviews and observe that standard, untuned algorithms are 
+capable of predicting users' ratings with over $80\%$ accuracy.  They 
+hypothesize that the algorithms learn to discriminate reviews based upon 
+a small set of words that indicate sentiment.  Their model represents reviews 
+as sparse vectors in a high-dimensional space where the $i$th component 
+of an input vector $\vec{x}$ indciates the count or presence for a single 
+unigram or bigram.  Their experiments show that standard machine learning 
+algorithms are capable of separating classes of positive- and negative-rated
+reviews 
+
+Since our task is to predict usefulness (which is independent of sentiment), 
+
 
 Dodds et al \cite{DoddsANEWPaper} have conducted a related study and build upon work in 
 pyscholinguistics towards building a ``hedonometer'' capable of predicting positive 
 and negative sentiment from unlabeled text.  Their work devises a simple model utilizing the 
 valence scores of words from the ANEW data set
+
+
+Their model represents reviews as sparse vectors in a high-dimensional space where the $i$th component 
+of a vector $\vec{x}$ indciates the count or presence for a single unigram or bigram.  They observe
+that SVMs peform slightly better when trained on vectors of word presence rather than counts.
+
 
 \section{Feature Extraction and Labeling the Data}
 We have divided the features into several categories.
