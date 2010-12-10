@@ -103,9 +103,9 @@ algorithms to movie reviews, hypothesizing that algorithms will learn to
 identify a small set of words that indicate sentiment.  Their model represents 
 reviews as sparse vectors in a high-dimensional space where the $i$th component 
 of an input vector $\vec{x}$ indciates the count or presence for a single 
-unigram or bigram.  Their experiments show that standard, un-tuned machine learning 
-algorithms are capable of separating classes of positive- and negative-rated
-reviews with over $80\%$ accuracy.  
+unigram or bigram.  Their experiments show that standard, un-tuned machine 
+learning algorithms are capable of separating classes of positive- and 
+negative-rated reviews with over $80\%$ accuracy.  
 
 Since usefulness is independent of sentiment (i.e. negative reviews are often
 very useful), we choose to study a slightly different set of features that
@@ -135,20 +135,24 @@ consider the number of capitalization mistakes and words with all capital
 letters. As before, we normalize these feature values by dividing
 counts by review word count.
 
-\subsection{Emphatic Word Scores}
+\subsection{Emphatic Word Score}
 Emphatic reviews are often more useful than neutral opinions.  We define a 
 textual feature that measures sentiment strength independent of postivity
-using data from the the Affective Norms from English Words\cite{BradleyANEW} 
-
- we draw on a psychological model
-of 
-we 
-
- is 
-Dodds et al \cite{DoddsANEWPaper} have conducted a related study and build upon work in 
-pyscholinguistics towards building a ``hedonometer'' capable of predicting positive 
-and negative sentiment from unlabeled text.  Their work devises a simple model utilizing the 
-valence scores of words from the ANEW data set
+using empirical sentiment measures from The Study on Affective Norms from 
+English Words (ANEW)\cite{BradleyANEW}.\footnote{In particular, we used this PDF 
+available freely online \url{http://dionysus.psych.wisc.edu/methods/Stim/ANEW/ANEW.pdf}.}
+Dodds et al \cite{DoddsANEWPaper} propose an effective sentiment scoring model 
+that interprets the ANEW study's ``valence'' score (a real number in $[1,10]$) 
+as a measure of sentiment.  (For example, in the ANEW study, ``triumph'' has a 
+valence score of $8.87$, while ``hostage'' has a score of $2.20$).  Dodds et al 
+propse scoring text using the weighted sum 
+\[
+    \frac{\sum^n_{i=0} v_i f_i}{\sum^n_{i=0} f_i}
+\]
+where $v_i$ is the valence and $f_i$ is the frequency of the $i$th distinct
+word, respectively.  They find that this score effectively differentiates
+postive and negative sentiment text across several domains.  We include
+this scoring mechanism as one of our features.
 
 \subsection{Product/Service Related Features} 
 This feature is somewhat different than the previous ones; it depends
