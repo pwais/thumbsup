@@ -365,10 +365,18 @@ results.
 \section{Future work}
 \label{sec:future-work}
 
-Using a fixed $\beta$ we would like to see how well the classifier
+Looking at the performances of the algorithms, we observe Adaboost
+and linear SVM have similar accuracies on most of the various
+experiment instances. As stated in Section \ref{sec:single_domain} one
+of the obvious differences is the quality of the confusion matrices. We would like to
+investigate the incorrectly classified examples for each algorithm and
+come up with an explanation related to what it is minimizing for
+classification.  
+
+For domain adaptation part, we would like to see how well the classifier
 performs when the distance between the target and source distribution
-varies. To alter $\zeta$, we could consider only a specific category
-on each domain. 
+varies keeping the $\beta$ fixed. To alter $\zeta$, we can consider
+only a specific category on each domain. 
 
 For example, from the source domain (Amazon), we could consider the
 set of categories $C_S$=\{ Books, Electronics, DVDs and Clothing\};
@@ -377,8 +385,9 @@ $C_T=$\{Restaurants\}. For each combination in $C_s\times C_T$ we
 train and test a different linear classifier to estimate the distance
 between the two distributions of each configuration.
 
-\section{Comclusion}
-\label{sec:comclusion}
+\section{Conclusion}
+\label{sec:conclusion}
+
 
 \bibliographystyle{IEEEtran}
 \bibliography{bib,IEEEabrv}
